@@ -1,0 +1,48 @@
+{
+  "name": "twomoons",
+  "tree": {
+		"$className": "DataModel",
+
+    "HttpService": {
+      "$className": "HttpService",
+      "$properties": {
+        "HttpEnabled": true
+      }
+    },
+
+   "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+
+      "UI": {
+        "$path": "src/UI"
+      },
+      "Shared": {
+        "$path": "src/Shared"
+      },
+      "Lib": {
+        "$path": "lib"
+      },
+
+      "ImportPaths": {
+        "$path": "src/ImportPaths.lua"
+      },
+      "ReloadDirectories": {
+        "$path": "src/ReloadDirectories.lua"
+      }
+		},
+
+		"StarterPlayer":{
+			"$className": "StarterPlayer",
+
+			"StarterPlayerScripts": {
+				"$className": "StarterPlayerScripts",
+				"$path": "src/Client"
+			}
+		},
+
+		"ServerScriptService":{
+			"$className": "ServerScriptService",
+			"$path": "src/Server"
+		}
+  }
+}
