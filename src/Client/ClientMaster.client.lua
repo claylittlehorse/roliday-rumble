@@ -19,8 +19,9 @@ if RunService:IsStudio() then
 end
 
 local loadOrder = {
-	"../Systems/ClientCommands",
-	"../Systems/UI",
+	"Client/Systems/ClientCommands",
+	"Client/Systems/UI",
+	"Client/Systems/Input"
 }
 
 for _, path in ipairs(loadOrder) do

@@ -1,0 +1,3 @@
+return {
+	ATTACK = "Attack"
+}
