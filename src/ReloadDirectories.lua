@@ -3,7 +3,6 @@
 -- Members inside these directories will get cloned every update to create a new
 -- virtual data model for import!
 return {
-    "Reducers",
     "UI",
     "Data",
 	"Actions",

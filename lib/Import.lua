@@ -410,7 +410,7 @@ function Import.setChangeListenersActive(active)
 
 			local fullPath = getFullPath(path)
 			local obj, missing = findInstanceFromPathRecursive(absoluteRoot, fullPath, true)
-			assert(obj ~= NONE_RESULT, "Could not find instance '"..(missing or "").."' from path '"..path.."'")
+			assert(obj ~= NONE_RESULT, "Reload directories: Could not find instance '"..(missing or "").."' from path '"..path.."'")
 			listenForChangesRecursive(obj)
 			listenForDescendantsAdded(obj)
 		end

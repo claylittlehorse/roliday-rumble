@@ -4,14 +4,12 @@ import.setConfig{
 	reloadDirectories = require(game.ReplicatedStorage.ReloadDirectories)
 }
 
-local Store = import "State/Store"
-
 local loadOrder = {
 	"../Systems/Commands",
-	"../Systems/TestRunner",
+	-- "../Systems/TestRunner",
 }
 
 for _, path in ipairs(loadOrder) do
 	local system = import(path)
-	system.start(Store)
+	system.start()
 end

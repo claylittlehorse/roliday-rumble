@@ -1,6 +1,11 @@
 local import = require(game.ReplicatedStorage.Lib.Import)
 
-local Actions = import "Shared/Actionss"
+local RunService = game:GetService("RunService")
+
+local Input = import "Client/Systems/Input"
+local StepOrder = import "Data/StepOrder"
+local Actions = import "Shared/Actions"
+local ActionIds = import "Data/ActionIds"
 local ActionQueue =  {}
 
 local _queue = {}
@@ -23,6 +28,22 @@ function ActionQueue.step()
 			action.init(initialState)
 		end
 	end
+
+	_queue = {}
+end
+
+function ActionQueue.start()
+	Input.bindActionInput("Attack", Enum.UserInputType.MouseButton1, Enum.KeyCode.ButtonR2)
+
+	RunService:BindToRenderStep("ActionQueue", StepOrder.ACTION_QUEUE, function()
+
+		local _, attackInputState = Input.readBoundAction("Attack")
+		if attackInputState == Enum.UserInputState.Begin then
+			ActionQueue.queueAction(ActionIds.ATTACK)
+		end
+
+		ActionQueue.step()
+	end)
 end
 
 return ActionQueue

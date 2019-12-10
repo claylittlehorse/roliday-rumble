@@ -8,7 +8,6 @@ import.setChangeListenersActive(true)
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local Store = import "State/Store"
 
 -- Wait for local player to actually exist
 local localPlayer = Players.LocalPlayer
@@ -20,13 +19,15 @@ end
 
 local loadOrder = {
 	"Client/Systems/ClientCommands",
-	"Client/Systems/UI",
-	"Client/Systems/Input"
+	-- "Client/Systems/UI",
+
+	"Client/Systems/ActionQueue",
+	"Client/Systems/ActionState"
 }
 
 for _, path in ipairs(loadOrder) do
 	local system = import(path)
-	system.start(Store)
+	system.start()
 end
 
 import.setConfig{
