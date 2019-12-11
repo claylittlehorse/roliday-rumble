@@ -21,6 +21,7 @@ return {
 	Storage = "ReplicatedStorage/Storage",
 
 	-- Important libraries
+	Collisions = "ReplicatedStorage/Lib/Collisions",
 	Cmdr = "ReplicatedStorage/Lib/Cmdr",
 	Cryo = "ReplicatedStorage/Lib/Cryo",
 	DataStore2 = "ReplicatedStorage/Lib/DataStore2",
@@ -29,8 +30,6 @@ return {
 	Network = "ReplicatedStorage/Lib/Network",
 	Promise = "ReplicatedStorage/Lib/Promise",
 	Roact = "ReplicatedStorage/Lib/Roact",
-	RoactRodux = "ReplicatedStorage/Lib/RoactRodux",
-	Rodux = "ReplicatedStorage/Lib/Rodux",
 	t = "ReplicatedStorage/Lib/t",
 	TestEZ = "ReplicatedStorage/Lib/TestEZ",
 

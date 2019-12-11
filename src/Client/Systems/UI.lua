@@ -6,7 +6,6 @@ local StarterGui = game:GetService("StarterGui")
 local Roact = import "Roact"
 
 local ROOT_NAME = import("Data/InterfaceConstants", {"ROOT_NAME"})
-local Store = import "State/Store"
 
 local client = Players.LocalPlayer
 
@@ -22,7 +21,7 @@ local function mountApp(app)
 	end
 
 	mountedApp = Roact.mount(
-		app(Store),
+		app(),
 		client:WaitForChild("PlayerGui"),
 		ROOT_NAME
 	)
