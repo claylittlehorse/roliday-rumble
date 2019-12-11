@@ -1,3 +1,4 @@
 return {
-	ATTACK = "Attack"
+	ATTACK = "Attack",
+	FALLDOWN = "Falldown"
 }

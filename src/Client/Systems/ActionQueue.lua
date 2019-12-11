@@ -35,11 +35,18 @@ end
 function ActionQueue.start()
 	Input.bindActionInput("Attack", Enum.UserInputType.MouseButton1, Enum.KeyCode.ButtonR2)
 
+	Input.bindActionInput("FallDown", Enum.KeyCode.F)
+
 	RunService:BindToRenderStep("ActionQueue", StepOrder.ACTION_QUEUE, function()
 
 		local _, attackInputState = Input.readBoundAction("Attack")
 		if attackInputState == Enum.UserInputState.Begin then
 			ActionQueue.queueAction(ActionIds.ATTACK)
+		end
+
+		local _, falldownInputState = Input.readBoundAction("FallDown")
+		if falldownInputState == Enum.UserInputState.Begin then
+			ActionQueue.queueAction(ActionIds.FALLDOWN)
 		end
 
 		ActionQueue.step()
