@@ -52,13 +52,13 @@ end
 
 function Sound.start()
 	if IS_CLIENT then
-		Network.hooKEvent(PLAY_SOUND, function(soundName, pos, time)
+		Network.hookEvent(PLAY_SOUND, function(soundName, pos, time)
 			Sound.playSound(soundName, pos, time, true)
 		end)
 	end
 
 	if IS_SERVER then
-		Network.hooKEvent(PLAY_SOUND, function(player, soundName, pos, time)
+		Network.hookEvent(PLAY_SOUND, function(player, soundName, pos, time)
 			Network.fireOtherClients(PLAY_SOUND, player, soundName, pos, time)
 		end)
 	end

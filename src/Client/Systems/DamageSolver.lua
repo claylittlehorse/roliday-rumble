@@ -47,15 +47,12 @@ end
 
 local function canDamageThing(damage, thing, thingCollider)
 	if not damage:canDamageThing(thing) then
-		print("cant damage that thing", thing)
 		return false
 	end
 
 	local collider = damage:getCollider()
 	if CheckCollision(collider, thingCollider) then
 		return true
-	else
-		print("didnt collide with", thing)
 	end
 
 	return false

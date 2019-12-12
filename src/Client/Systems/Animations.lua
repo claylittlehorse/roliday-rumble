@@ -7,6 +7,8 @@ local localPlayer = Players.LocalPlayer
 
 local StepOrder = import "Data/StepOrder"
 
+local IsValidCharacter = import "GameUtils/IsValidCharacter"
+
 local AnimationNames = import "Data/AnimationNames"
 local AttackAnim = import "Assets/Animations/AttackAnim"
 local CarryingAnim = import "Assets/Animations/CarryingAnim"
@@ -40,19 +42,8 @@ local function loadAnimations(character)
 		loadAnim.Priority = animInfo.priority
 		loadAnim.Looped = animInfo.looped
 
-		print(animName, animInfo.looped, animInfo.priority, animInfo.weight)
-
 		_loadedAnims[animName] = loadAnim
 	end
-end
-
-local function isCharacterValid(character)
-	local isInWorkspace = character:IsDescendantOf(Workspace)
-	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	local humanoid = character:FindFirstChild("Humanoid")
-
-	local isValid = isInWorkspace and rootPart and humanoid
-	return isValid
 end
 
 function Animations.playAnimation(animName, animCallback)
@@ -69,14 +60,14 @@ function Animations.playAnimation(animName, animCallback)
 end
 
 local function reconcileLoadedCharacter()
-	if _loadedCharacter and not isCharacterValid(_loadedCharacter) then
+	if _loadedCharacter and not IsValidCharacter(_loadedCharacter) then
 		_loadedCharacter = nil
 		_loadedAnims = {}
 	end
 
 	local playerCharacter = localPlayer.character
 
-	if playerCharacter ~= _loadedCharacter and isCharacterValid(playerCharacter) then
+	if playerCharacter ~= _loadedCharacter and IsValidCharacter(playerCharacter) then
 		loadAnimations(playerCharacter)
 		_loadedCharacter = playerCharacter
 	end
