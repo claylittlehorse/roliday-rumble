@@ -32,9 +32,7 @@ function Sound.playSound(soundName, pos, time, dontReplicate)
 		return
 	end
 
-	if IS_SERVER then
-		Network.fireAllCleints(PLAY_SOUND, soundName, pos, time)
-	elseif IS_CLIENT then
+	if IS_CLIENT then
 		Network.fireServer(PLAY_SOUND, soundName, pos, time)
 	end
 end

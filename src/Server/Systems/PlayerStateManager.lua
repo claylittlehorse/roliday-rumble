@@ -12,6 +12,7 @@ local function getInitialState(player)
 		health = {
 			currentHealth = 100,
 			lastDamagedTime = 0,
+			lastRegenedTime = 0,
 		},
 		knockDown = {
 			isKnockedDown = false,

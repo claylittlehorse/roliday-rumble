@@ -2,10 +2,13 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
 
 local CheckCollision = import "Utils/CheckCollision"
 local ColliderFromCharacter = import "GameUtils/ColliderFromCharacter"
+local IsValidCharacter = import "GameUtils/IsValidCharacter"
+
+local Network = import "Network"
+local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 
 local StepOrder = import "Data/StepOrder"
 
@@ -14,21 +17,7 @@ local _currentDamage = nil
 
 local function getCharacter(player)
 	local character = player.Character
-	if not character:IsDescendantOf(Workspace) then
-		return
-	end
-
-	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	if not rootPart then
-		return
-	end
-
-	local humanoid = character:FindFirstChild("Humanoid")
-	if not humanoid or humanoid.PlatformStand then
-		return
-	end
-
-	return character
+	return (character and IsValidCharacter(character)) and character
 end
 
 local function getDamageablePlayers()
@@ -73,12 +62,12 @@ function DamageSolver.start()
 			return
 		end
 
-		for _, player in ipairs(getDamageablePlayers()) do
-			local character = player.Character
+		for _, victimPlayer in ipairs(getDamageablePlayers()) do
+			local character = victimPlayer.Character
 			local characterCollider = ColliderFromCharacter.characterCollider(character)
-			if canDamageThing(_currentDamage, player, characterCollider) then
-				print("hurting", character.Name)
-				_currentDamage:onThingDamaged(player)
+			if canDamageThing(_currentDamage, victimPlayer, characterCollider) then
+				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, 20)
+				_currentDamage:onThingDamaged(victimPlayer)
 			end
 		end
 	end)

@@ -2,9 +2,8 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 
 local RunService = game:GetService("RunService")
 
-local HealthQueue = import "./HealthQueue"
 local StateRemove = import "./StateRemove"
-local Carrying = import "./Carrying"
+local HealthRegen = import "./HealthRegen"
 
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 
@@ -14,9 +13,8 @@ function PlayerStateStep.start()
 	RunService.Heartbeat:Connect(function()
 		local playerStates = PlayerStateManager.getPlayerStates()
 
-		-- HealthQueue.step(playerStates)
-		-- Carrying.step(playerStates)
 		StateRemove.step(playerStates)
+		HealthRegen.step(playerStates)
 	end)
 end
 
