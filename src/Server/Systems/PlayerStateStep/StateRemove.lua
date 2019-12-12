@@ -11,7 +11,7 @@ function StateRemove.step(playerStates)
 			playerStates[userId] = nil
 		else
 			if playerState.health.currentHealth <= 0 then
-				playerStates[userId].Humanoid.Health = 0
+				playerStates[userId].characterModel.Humanoid.Health = 0
 				playerStates[userId] = nil
 			end
 		end
