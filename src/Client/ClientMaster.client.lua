@@ -24,7 +24,8 @@ local loadOrder = {
 	"Client/Systems/ActionQueue",
 	"Client/Systems/ActionState",
 	"Client/Systems/DamageSolver",
-	"Client/Systems/Animations"
+	"Client/Systems/Animations",
+	"Shared/Systems/Sound",
 }
 
 for _, path in ipairs(loadOrder) do
