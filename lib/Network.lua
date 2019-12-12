@@ -1,19 +1,22 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
 
 local FOLDER_NAME = "_NETWORK"
 
-local REMOTE_STORAGE = ReplicatedStorage:FindFirstChild(FOLDER_NAME)
-
 local CALL_ERROR_MESSAGE = "%s is a static method (call with '.', not ':')"
+
+local isClient = RunService:IsClient()
+local isServer = RunService:IsServer()
+
+local REMOTE_STORAGE = ReplicatedStorage:FindFirstChild(FOLDER_NAME)
 
 if not REMOTE_STORAGE and RunService:IsServer() then
 	REMOTE_STORAGE = Instance.new("Folder", ReplicatedStorage)
 	REMOTE_STORAGE.Name = FOLDER_NAME
+elseif RunService:IsClient() then
+	REMOTE_STORAGE = ReplicatedStorage:WaitForChild(FOLDER_NAME)
 end
-
-local isClient = RunService:IsClient()
-local isServer = RunService:IsServer()
 
 local Network = {}
 local eventConnections = {}
@@ -96,6 +99,14 @@ function Network.fireClient(eventName, client, ...)
 	assert(eventName ~= Network, CALL_ERROR_MESSAGE:format("fireClient"))
 	local remoteObject = getRemote(eventName)
 	remoteObject:FireClient(client, ...)
+end
+
+function Network.fireOtherClients(eventName, excludeClient, ...)
+	for _, thisPlayer in pairs(Players:GetPlayers()) do
+		if thisPlayer ~= excludeClient then
+			Network.fireClient(eventName, thisPlayer, ...)
+		end
+	end
 end
 
 function Network.fireAllClients(eventName, ...)
