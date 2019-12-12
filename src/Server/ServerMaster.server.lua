@@ -7,6 +7,7 @@ import.setConfig{
 local loadOrder = {
 	"../Systems/Commands",
 	-- "../Systems/TestRunner",
+	"Shared/Systems/Sound"
 }
 
 for _, path in ipairs(loadOrder) do
