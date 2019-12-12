@@ -6,7 +6,7 @@ local ActionPhases = import "Data/ActionPhases"
 
 local AttackDamage = import "Shared/Damages/AttackDamage"
 local DamageSolver = import "Client/Systems/DamageSolver"
-local PlaySoundAtCharacter = import "GameUtils/PlaySoundAtCharacter"
+local Sound = import "Shared/Systems/Sound"
 
 local Animations = import "Client/Systems/Animations"
 local AnimationNames = import "Data/AnimationNames"
@@ -38,7 +38,7 @@ function Attack.init(initialState)
 		currentPhase = ActionPhases.WINDUP
 	})
 
-	PlaySoundAtCharacter("Windup")
+	Sound.playAtCharacter("Windup")
 	Animations.playAnimation(AnimationNames.ATTACK, function(anim)
 		if not anim.isPlaying then
 			return true
@@ -59,7 +59,7 @@ function Attack.step(state)
 	state.currentPhase = newPhase
 
 	if phaseChanged and ActionState.isActive(Attack.actionId) then
-		PlaySoundAtCharacter("Swing")
+		Sound.playAtCharacter("Swing")
 		local damage = AttackDamage.new(Attack.actionId)
 		DamageSolver.setCurrentDamage(damage)
 	end
