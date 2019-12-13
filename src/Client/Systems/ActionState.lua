@@ -110,7 +110,7 @@ function ActionState.getPhaseAlpha(actionId)
 	return alpha or 0
 end
 
-function ActionState.getMovementAction(entity)
+function ActionState.getMovementAction()
 	local highestPriority = -math.huge
 	local selectedAction do
 		for actionId, _ in pairs(_actionStates) do

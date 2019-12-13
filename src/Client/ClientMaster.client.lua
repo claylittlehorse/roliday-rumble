@@ -26,6 +26,8 @@ local loadOrder = {
 	"Client/Systems/DamageSolver",
 	"Client/Systems/Animations",
 	"Shared/Systems/Sound",
+	"Shared/Systems/Knockback",
+	"Client/Systems/Movement"
 }
 
 for _, path in ipairs(loadOrder) do

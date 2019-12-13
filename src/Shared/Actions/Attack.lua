@@ -69,4 +69,23 @@ function Attack.step(state)
 	end
 end
 
+function Attack.changeSpeed(baseSpeed)
+	if ActionState.isActive(Attack.actionId) then
+		return baseSpeed / 5
+	elseif ActionState.isCooldown(Attack.actionId) then
+		return baseSpeed / 2
+	end
+
+	return baseSpeed
+end
+
+function Attack.addVelocity()
+	if ActionState.isActive(Attack.actionId) then
+		local alpha = 1 - ActionState.getPhaseAlpha(Attack.actionId)
+		return Vector3.new(0, 0, alpha * -40)
+	end
+
+	return Vector3.new(0, 0, 0)
+end
+
 return Attack

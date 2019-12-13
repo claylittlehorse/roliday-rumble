@@ -7,10 +7,11 @@ import.setConfig{
 local loadOrder = {
 	"../Systems/Commands",
 	-- "../Systems/TestRunner",
-	"Shared/Systems/Sound",
 	"Server/Systems/PlayerStateStep",
 	"Server/Systems/GameLoop",
-	"Server/Systems/DamageReplicator"
+	"Server/Systems/DamageReplicator",
+	"Shared/Systems/Knockback",
+	"Shared/Systems/Sound",
 }
 
 for _, path in ipairs(loadOrder) do

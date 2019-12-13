@@ -6,11 +6,18 @@ local RunService = game:GetService("RunService")
 local CheckCollision = import "Utils/CheckCollision"
 local ColliderFromCharacter = import "GameUtils/ColliderFromCharacter"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
+local GetLocalCharacter = import "Utils/GetLocalCharacter"
+
+local Knockback = import "Shared/Systems/Knockback"
+local KnockbackModel = import "Data/Models/KnockbackModel"
 
 local Network = import "Network"
 local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 
 local StepOrder = import "Data/StepOrder"
+
+local KNOCKBACK_SPEED = 40
+local KNOCKBACK_LENGTH = 0.4
 
 local DamageSolver = {}
 local _currentDamage = nil
@@ -53,7 +60,8 @@ end
 
 function DamageSolver.start()
 	RunService:BindToRenderStep("DamageStep", StepOrder.DAMAGE, function()
-		if not _currentDamage then
+		local character = GetLocalCharacter()
+		if not (character and IsValidCharacter(character)) or not _currentDamage then
 			return
 		end
 
@@ -63,9 +71,12 @@ function DamageSolver.start()
 		end
 
 		for _, victimPlayer in ipairs(getDamageablePlayers()) do
-			local character = victimPlayer.Character
-			local characterCollider = ColliderFromCharacter.characterCollider(character)
-			if canDamageThing(_currentDamage, victimPlayer, characterCollider) then
+			local victimCollider = ColliderFromCharacter.characterCollider(victimPlayer.Character)
+			if canDamageThing(_currentDamage, victimPlayer, victimCollider) then
+				local rootPart = character:FindFirstChild("HumanoidRootPart")
+				print(rootPart.CFrame.LookVector)
+				local knockbackModel = KnockbackModel.new(rootPart.CFrame.LookVector, KNOCKBACK_SPEED, KNOCKBACK_LENGTH)
+				Knockback.applyKnockback(knockbackModel, victimPlayer)
 				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, 20)
 				_currentDamage:onThingDamaged(victimPlayer)
 			end
