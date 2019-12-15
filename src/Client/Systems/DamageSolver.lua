@@ -76,7 +76,7 @@ function DamageSolver.start()
 				local rootPart = character:FindFirstChild("HumanoidRootPart")
 				print(rootPart.CFrame.LookVector)
 				local knockbackModel = KnockbackModel.new(rootPart.CFrame.LookVector, KNOCKBACK_SPEED, KNOCKBACK_LENGTH)
-				Knockback.applyKnockback(knockbackModel, victimPlayer)
+				Knockback.applyKnockback(knockbackModel, victimPlayer, true)
 				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, 20)
 				_currentDamage:onThingDamaged(victimPlayer)
 			end

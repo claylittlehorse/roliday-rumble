@@ -10,10 +10,10 @@ local ActionQueue =  {}
 
 local _queue = {}
 
-function ActionQueue.queueAction(actionId, initialData)
+function ActionQueue.queueAction(actionId, initialState)
 	_queue[#_queue+1] = {
 		actionId = actionId,
-		initialData = initialData
+		initialState = initialState
 	}
 end
 
@@ -46,7 +46,9 @@ function ActionQueue.start()
 
 		local _, falldownInputState = Input.readBoundAction("FallDown")
 		if falldownInputState == Enum.UserInputState.Begin then
-			ActionQueue.queueAction(ActionIds.FALLDOWN)
+			ActionQueue.queueAction(ActionIds.FALLDOWN, {
+				velocity = (workspace.CurrentCamera.CFrame.LookVector * Vector3.new(1, 0, 1)) * 30
+			})
 		end
 
 		ActionQueue.step()

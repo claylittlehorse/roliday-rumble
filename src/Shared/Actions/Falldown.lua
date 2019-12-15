@@ -13,7 +13,7 @@ Falldown.movementPriority = 1
 Falldown.actionId = ActionIds.FALLDOWN
 Falldown.phaseTimings = {
 	[ActionPhases.WINDUP] = 0,
-	[ActionPhases.ACTIVE] = 2,
+	[ActionPhases.ACTIVE] = 1.5,
 	[ActionPhases.COOLDOWN] = 0,
 }
 
@@ -36,8 +36,10 @@ function Falldown.init(initialState)
 	end
 	humanoid.PlatformStand = true
 
-	rootPart.Velocity = rootPart.Velocity * 2
-	rootPart.RotVelocity = (rootPart.CFrame.RightVector * -5) + (rootPart.CFrame.UpVector * 50)
+	local flingVelocity = initialState.velocity + Vector3.new(0, 50, 0)
+	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit)
+	rootPart.RotVelocity = rotVelocity * 10
+	rootPart.Velocity = flingVelocity.unit * 50
 
 	ActionState.setActionState(Falldown.actionId, {
 		startTime = tick(),
@@ -50,9 +52,17 @@ function Falldown.step(state)
 
 		local character = GetLocalCharacter()
 		local humanoid = character:FindFirstChild("Humanoid")
-		if not humanoid then
+		local rootPart = character:FindFirstChild("HumanoidRootPart")
+		if not (humanoid and rootPart) then
 			return
 		end
+
+		local targetLookVector = (rootPart.CFrame.UpVector * Vector3.new(1, 0, 1)).unit
+		if rootPart.CFrame.LookVector.Y > 0 then
+			targetLookVector = targetLookVector * -1
+		end
+		local newPos = rootPart.Position + Vector3.new(0, 2, 0)
+		rootPart.CFrame = CFrame.new(newPos, newPos+targetLookVector)
 		humanoid.PlatformStand = false
 	end
 end

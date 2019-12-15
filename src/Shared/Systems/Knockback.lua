@@ -1,9 +1,12 @@
 local import = require(game.ReplicatedStorage.Lib.Import)
 
+local RunService = game:GetService("RunService")
+
 local Network = import "Network"
 local REPLICATE_KNOCKBACK = import("Data/NetworkEvents/CombatEvents", {"REPLICATE_KNOCKBACK"})
 
-local RunService = game:GetService("RunService")
+local ActionQueue = import "Client/Systems/ActionQueue"
+local ActionIds = import "Data/ActionIds"
 
 local IS_SERVER = RunService:IsServer()
 local IS_CLIENT = RunService:IsClient()
@@ -11,11 +14,11 @@ local IS_CLIENT = RunService:IsClient()
 local Knockback = {}
 local _clientKnockbackForces = {}
 
-function Knockback.applyKnockback(knockback, player)
+function Knockback.applyKnockback(knockback, player, shouldKnockdown)
 	if IS_SERVER then
-		Network.fireClient(REPLICATE_KNOCKBACK, player, knockback)
+		Network.fireClient(REPLICATE_KNOCKBACK, player, knockback, shouldKnockdown)
 	else
-		Network.fireServer(REPLICATE_KNOCKBACK, knockback, player)
+		Network.fireServer(REPLICATE_KNOCKBACK, knockback, player, shouldKnockdown)
 	end
 end
 
@@ -36,15 +39,22 @@ end
 
 function Knockback.start()
 	if IS_SERVER then
-		Network.hookEvent(REPLICATE_KNOCKBACK, function(player, knockback, victim)
+		Network.hookEvent(REPLICATE_KNOCKBACK, function(player, knockback, victim, shouldKnockdown)
 			--Update tick since the client tick will be wrong on server
 			knockback.startTime = tick()
-			Knockback.applyKnockback(knockback, victim)
+			Knockback.applyKnockback(knockback, victim, shouldKnockdown)
 		end)
 	end
 
 	if IS_CLIENT then
-		Network.hookEvent(REPLICATE_KNOCKBACK, function(knockback)
+		Network.hookEvent(REPLICATE_KNOCKBACK, function(knockback, shouldKnockdown)
+			if shouldKnockdown then
+				ActionQueue.queueAction(ActionIds.FALLDOWN, {
+					velocity = knockback.speed * knockback.direction
+				})
+				return
+			end
+
 			knockback.startTime = tick()
 			_clientKnockbackForces[#_clientKnockbackForces+1] = knockback
 		end)
