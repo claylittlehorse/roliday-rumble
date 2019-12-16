@@ -13,8 +13,8 @@ Falldown.movementPriority = 1
 Falldown.actionId = ActionIds.FALLDOWN
 Falldown.phaseTimings = {
 	[ActionPhases.WINDUP] = 0,
-	[ActionPhases.ACTIVE] = 1.5,
-	[ActionPhases.COOLDOWN] = 0,
+	[ActionPhases.ACTIVE] = 1.4,
+	[ActionPhases.COOLDOWN] = 0.1,
 }
 
 function Falldown.validate()
@@ -36,10 +36,10 @@ function Falldown.init(initialState)
 	end
 	humanoid.PlatformStand = true
 
-	local flingVelocity = initialState.velocity + Vector3.new(0, 50, 0)
+	local flingVelocity = initialState.velocity + Vector3.new(0, 40, 0)
 	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit)
-	rootPart.RotVelocity = rotVelocity * 10
-	rootPart.Velocity = flingVelocity.unit * 50
+	rootPart.RotVelocity = rotVelocity * 20
+	rootPart.Velocity = flingVelocity.unit * 60
 
 	ActionState.setActionState(Falldown.actionId, {
 		startTime = tick(),
@@ -47,23 +47,30 @@ function Falldown.init(initialState)
 end
 
 function Falldown.step(state)
-	if ActionState.isComplete(Falldown.actionId) then
+	local character = GetLocalCharacter()
+	local humanoid = character:FindFirstChild("Humanoid")
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	if not (humanoid and rootPart) then
 		ActionState.setActionState(Falldown.actionId, nil)
+		return
+	end
 
-		local character = GetLocalCharacter()
-		local humanoid = character:FindFirstChild("Humanoid")
-		local rootPart = character:FindFirstChild("HumanoidRootPart")
-		if not (humanoid and rootPart) then
-			return
-		end
-
+	if ActionState.isCooldown(Falldown.actionId) and not state.targetCF then
 		local targetLookVector = (rootPart.CFrame.UpVector * Vector3.new(1, 0, 1)).unit
 		if rootPart.CFrame.LookVector.Y > 0 then
 			targetLookVector = targetLookVector * -1
 		end
 		local newPos = rootPart.Position + Vector3.new(0, 2, 0)
-		rootPart.CFrame = CFrame.new(newPos, newPos+targetLookVector)
+		state.targetCF = CFrame.new(newPos, newPos+targetLookVector)
+	elseif ActionState.isCooldown(Falldown.actionId) then
+		rootPart.CFrame = rootPart.CFrame:Lerp(state.targetCF, 0.5)
+	end
+
+	if ActionState.isComplete(Falldown.actionId) then
+		rootPart.CFrame = state.targetCF
 		humanoid.PlatformStand = false
+
+		ActionState.setActionState(Falldown.actionId, nil)
 	end
 end
 

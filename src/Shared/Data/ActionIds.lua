@@ -1,4 +1,7 @@
 return {
 	ATTACK = "Attack",
-	FALLDOWN = "Falldown"
+	FALLDOWN = "Falldown",
+
+	PUNCH = "Punch",
+	END_PUNCH = "EndPunch",
 }

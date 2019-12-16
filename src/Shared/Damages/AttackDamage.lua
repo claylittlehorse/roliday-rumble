@@ -9,11 +9,12 @@ local ActionState = import "Client/Systems/ActionState"
 local AttackDamage = {}
 AttackDamage.__index = AttackDamage
 
-function AttackDamage.new(actionId)
+function AttackDamage.new(actionId, shouldKnockdown)
     local self = {
 		actionId = actionId,
-		damageAmount = 10,
+		damageAmount = 5,
 		isActive = true,
+		shouldKnockdown = shouldKnockdown,
 		damagedThings = {}
 	}
     return setmetatable(self, AttackDamage)

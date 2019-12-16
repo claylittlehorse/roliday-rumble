@@ -16,8 +16,8 @@ local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 
 local StepOrder = import "Data/StepOrder"
 
-local KNOCKBACK_SPEED = 40
-local KNOCKBACK_LENGTH = 0.4
+local KNOCKBACK_SPEED = 25
+local KNOCKBACK_LENGTH = 0.5
 
 local DamageSolver = {}
 local _currentDamage = nil
@@ -74,10 +74,10 @@ function DamageSolver.start()
 			local victimCollider = ColliderFromCharacter.characterCollider(victimPlayer.Character)
 			if canDamageThing(_currentDamage, victimPlayer, victimCollider) then
 				local rootPart = character:FindFirstChild("HumanoidRootPart")
-				print(rootPart.CFrame.LookVector)
+
 				local knockbackModel = KnockbackModel.new(rootPart.CFrame.LookVector, KNOCKBACK_SPEED, KNOCKBACK_LENGTH)
-				Knockback.applyKnockback(knockbackModel, victimPlayer, true)
-				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, 20)
+				Knockback.applyKnockback(knockbackModel, victimPlayer, _currentDamage.shouldKnockdown)
+				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, _currentDamage.damageAmount)
 				_currentDamage:onThingDamaged(victimPlayer)
 			end
 		end

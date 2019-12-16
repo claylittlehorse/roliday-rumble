@@ -43,9 +43,6 @@ function GameLoop.start()
 				if charCount >= 2 then
 					isGameRunning = true
 					PlayerStateManager.resetPlayerStates()
-					print("started game")
-				else
-					print("cant start yet")
 				end
 			else
 				local playerStatesList = getPlayerStatesAsList()

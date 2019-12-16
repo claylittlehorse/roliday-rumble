@@ -47,9 +47,9 @@ local function loadAnimations(character)
 end
 
 function Animations.playAnimation(animName, animCallback)
+	assert(_loadedAnims[animName], "No animation of name "..animName)
 	if _loadedCharacter and _loadedAnims[animName] then
 		_loadedAnims[animName]:Play()
-
 		if animCallback then
 			_animCallbacks[animName] = {
 				callback = animCallback,
