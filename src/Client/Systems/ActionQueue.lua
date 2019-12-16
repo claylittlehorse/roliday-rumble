@@ -8,6 +8,9 @@ local Actions = import "Shared/Actions"
 local ActionIds = import "Data/ActionIds"
 local ActionQueue =  {}
 
+local Network = import "Network"
+local CombatEvents = import "Data/NetworkEvents/CombatEvents"
+
 local _queue = {}
 
 function ActionQueue.queueAction(actionId, initialState)
@@ -34,8 +37,16 @@ end
 
 function ActionQueue.start()
 	Input.bindActionInput("Attack", Enum.UserInputType.MouseButton1, Enum.KeyCode.ButtonR2)
-
 	Input.bindActionInput("FallDown", Enum.KeyCode.F)
+
+	Network.hookEvent(CombatEvents.REPLICATE_ACTION, function(actionId, initialState)
+		local action = Actions[actionId]
+		assert(action, "No action found for actionId "..actionId)
+
+		if action.validate(initialState) then
+			action.init(initialState)
+		end
+	end)
 
 	RunService:BindToRenderStep("ActionQueue", StepOrder.ACTION_QUEUE, function()
 

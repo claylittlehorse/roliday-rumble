@@ -5,9 +5,13 @@ local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local Sound = import "Shared/Systems/Sound"
 
+local ActionIds = import "Data/ActionIds"
+
 local DamageReplication = {}
 
 function DamageReplication.start()
+	Network.createEvent(CombatEvents.REPLICATE_ACTION)
+
 	Network.hookEvent(CombatEvents.REPLICATE_DAMAGE, function(attackerPlayer, victimPlayer, damage)
 		local playerStates = PlayerStateManager.getPlayerStates()
 		local attackerUserId = tostring(attackerPlayer.UserId)
@@ -20,6 +24,7 @@ function DamageReplication.start()
 			Sound.playSound("Hurt", victimState.characterModel.HumanoidRootPart.Position)
 			victimState.health.currentHealth = math.max(victimState.health.currentHealth - damage, 0)
 			victimState.health.lastDamagedTime = tick()
+			Network.fireClient(CombatEvents.REPLICATE_ACTION, victimPlayer, ActionIds.STAGGER)
 		end
 	end)
 end

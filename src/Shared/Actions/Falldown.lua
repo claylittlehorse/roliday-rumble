@@ -4,6 +4,9 @@ local ActionIds = import "Data/ActionIds"
 local ActionState = import "Client/Systems/ActionState"
 local ActionPhases = import "Data/ActionPhases"
 
+local Animations = import "Client/Systems/Animations"
+local AnimationNames = import "Data/AnimationNames"
+
 local GetLocalCharacter = import "Utils/GetLocalCharacter"
 
 -- determine which attach we should be doing, delegate that action
@@ -44,6 +47,19 @@ function Falldown.init(initialState)
 	ActionState.setActionState(Falldown.actionId, {
 		startTime = tick(),
 	})
+
+	Animations.playAnimation(AnimationNames.CARRYING, function(anim)
+		if not anim.isPlaying then
+			return true
+		end
+
+		if not ActionState.hasAction(Falldown.actionId) then
+			anim:Stop()
+			return true
+		end
+
+		return false
+	end)
 end
 
 function Falldown.step(state)

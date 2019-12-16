@@ -48,7 +48,7 @@ function EndPunch.init(initialState)
 			return true
 		end
 
-		if not ActionState.hasAction(EndPunch.actionId) then
+		if not ActionState.hasAction(EndPunch.actionId) or ActionState.hasAction(ActionIds.STAGGER) then
 			anim:Stop()
 			return true
 		end

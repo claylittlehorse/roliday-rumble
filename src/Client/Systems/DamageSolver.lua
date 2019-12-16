@@ -16,8 +16,8 @@ local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 
 local StepOrder = import "Data/StepOrder"
 
-local KNOCKBACK_SPEED = 25
-local KNOCKBACK_LENGTH = 0.5
+local KNOCKBACK_SPEED = 30
+local KNOCKBACK_LENGTH = 0.3
 
 local DamageSolver = {}
 local _currentDamage = nil

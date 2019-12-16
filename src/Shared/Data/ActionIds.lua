@@ -4,4 +4,6 @@ return {
 
 	PUNCH = "Punch",
 	END_PUNCH = "EndPunch",
+
+	STAGGER = "Stagger",
 }
