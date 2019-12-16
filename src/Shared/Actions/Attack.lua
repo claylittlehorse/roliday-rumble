@@ -7,6 +7,7 @@ local CombatState = import "Client/Systems/CombatState"
 
 local Punch = import "Shared/Actions/Punch"
 local EndPunch = import "Shared/Actions/EndPunch"
+local Health = import "Client/Systems/Health"
 
 -- determine which attach we should be doing, delegate that action
 
@@ -18,6 +19,10 @@ local COMBO_LENGTH = 5
 local COMBO_TIMEOUT = 3
 
 function Attack.validate()
+	if not Health.isActive() then
+		return false
+	end
+
 	local isNotAttacking = not ActionState.hasActionInMap({
 		[ActionIds.PUNCH] = true,
 		[ActionIds.END_PUNCH] = true,

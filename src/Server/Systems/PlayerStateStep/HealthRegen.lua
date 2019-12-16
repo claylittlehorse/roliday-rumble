@@ -3,7 +3,7 @@ local HealthRegen = {}
 
 local regenInterval = 1
 local regenAmount = 5
-local damageTimeout = 1
+local damageTimeout = 3
 
 function HealthRegen.step(playerStates)
 	for _, playerState in pairs(playerStates) do

@@ -5,6 +5,9 @@ local Players = game:GetService("Players")
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 
+local Network = import "Network"
+local CombatEvents = import "Data/NetworkEvents/CombatEvents"
+
 local GameLoop = {}
 
 local function countValidCharacters()
@@ -36,6 +39,8 @@ end
 local isGameRunning = false
 
 function GameLoop.start()
+	Network.createEvent(CombatEvents.REPLICATE_ACTIVE)
+
 	coroutine.resume(coroutine.create(function()
 		while wait(1) do
 			if not isGameRunning then

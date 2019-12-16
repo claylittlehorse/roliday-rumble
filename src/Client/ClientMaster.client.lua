@@ -19,7 +19,7 @@ end
 
 local loadOrder = {
 	"Client/Systems/ClientCommands",
-	-- "Client/Systems/UI",
+	"Client/Systems/UI",
 
 	"Client/Systems/ActionQueue",
 	"Client/Systems/ActionState",
@@ -27,7 +27,8 @@ local loadOrder = {
 	"Client/Systems/Animations",
 	"Shared/Systems/Sound",
 	"Shared/Systems/Knockback",
-	"Client/Systems/Movement"
+	"Client/Systems/Movement",
+	"Client/Systems/Health",
 }
 
 for _, path in ipairs(loadOrder) do

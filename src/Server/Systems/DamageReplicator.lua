@@ -11,6 +11,7 @@ local DamageReplication = {}
 
 function DamageReplication.start()
 	Network.createEvent(CombatEvents.REPLICATE_ACTION)
+	Network.createEvent(CombatEvents.REPLICATE_HEALTH)
 
 	Network.hookEvent(CombatEvents.REPLICATE_DAMAGE, function(attackerPlayer, victimPlayer, damage)
 		local playerStates = PlayerStateManager.getPlayerStates()
@@ -25,6 +26,7 @@ function DamageReplication.start()
 			victimState.health.currentHealth = math.max(victimState.health.currentHealth - damage, 0)
 			victimState.health.lastDamagedTime = tick()
 			Network.fireClient(CombatEvents.REPLICATE_ACTION, victimPlayer, ActionIds.STAGGER)
+			Network.fireClient(CombatEvents.REPLICATE_HEALTH, victimPlayer, victimState.health.currentHealth)
 		end
 	end)
 end

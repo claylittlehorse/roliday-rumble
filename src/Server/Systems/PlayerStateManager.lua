@@ -3,6 +3,9 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local Players = game:GetService("Players")
 
+local Network = import "Network"
+local CombatEvents = import "Data/NetworkEvents/CombatEvents"
+
 local PlayerStateManager = {}
 local playerStates = {}
 
@@ -40,7 +43,10 @@ function PlayerStateManager.resetPlayerStates()
 		local userId = tostring(player.UserId)
 		local character = player.character
 		if IsValidCharacter(character) then
-			playerStates[userId] = getInitialState(player)
+			local state = getInitialState(player)
+			Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, true)
+			Network.fireClient(CombatEvents.REPLICATE_HEALTH, player, state.health.currentHealth)
+			playerStates[userId] = state
 		end
 	end
 end
