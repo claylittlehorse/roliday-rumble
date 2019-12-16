@@ -86,7 +86,7 @@ end
 function Punch.addVelocity()
 	if ActionState.isActive(Punch.actionId) then
 		local alpha = 1 - ActionState.getPhaseAlpha(Punch.actionId)
-		return Vector3.new(0, 0, alpha * -25)
+		return Vector3.new(0, 0, alpha * -20)
 	end
 
 	return Vector3.new(0, 0, 0)

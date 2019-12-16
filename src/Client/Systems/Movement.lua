@@ -13,7 +13,7 @@ local Movement = {}
 local _setupCharacter = nil
 local _bodyVel = nil
 
-local SPEED = 20
+local SPEED = 16
 
 local function setupMovement(character)
 	local rootPart = character:FindFirstChild("HumanoidRootPart")

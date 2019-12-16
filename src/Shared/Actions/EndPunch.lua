@@ -17,7 +17,7 @@ local EndPunch = {}
 EndPunch.movementPriority = 1
 EndPunch.actionId = ActionIds.END_PUNCH
 EndPunch.phaseTimings = {
-	[ActionPhases.WINDUP] = 0.2,
+	[ActionPhases.WINDUP] = 0.3,
 	[ActionPhases.ACTIVE] = 0.3,
 	[ActionPhases.COOLDOWN] = 0.5,
 }
@@ -43,18 +43,6 @@ function EndPunch.init(initialState)
 	})
 
 	Sound.playAtCharacter("Windup")
-	Animations.playAnimation(AnimationNames.ATTACK, function(anim)
-		if not anim.isPlaying then
-			return true
-		end
-
-		if not ActionState.hasAction(EndPunch.actionId) or ActionState.hasAction(ActionIds.STAGGER) then
-			anim:Stop()
-			return true
-		end
-
-		return false
-	end)
 end
 
 function EndPunch.step(state)
@@ -64,6 +52,18 @@ function EndPunch.step(state)
 
 	if phaseChanged and ActionState.isActive(EndPunch.actionId) then
 		Sound.playAtCharacter("LoudSwing")
+		Animations.playAnimation(AnimationNames.ATTACK, function(anim)
+			if not anim.isPlaying then
+				return true
+			end
+
+			if not ActionState.hasAction(EndPunch.actionId) or ActionState.hasAction(ActionIds.STAGGER) then
+				anim:Stop()
+				return true
+			end
+
+			return false
+		end)
 		local damage = AttackDamage.new(EndPunch.actionId, true)
 		DamageSolver.setCurrentDamage(damage)
 	end
@@ -74,19 +74,13 @@ function EndPunch.step(state)
 end
 
 function EndPunch.changeSpeed(baseSpeed)
-	if ActionState.isActive(EndPunch.actionId) then
-		return baseSpeed / 5
-	elseif ActionState.isCooldown(EndPunch.actionId) then
-		return baseSpeed / 5
-	end
-
-	return baseSpeed
+	return baseSpeed / 5
 end
 
 function EndPunch.addVelocity()
 	if ActionState.isActive(EndPunch.actionId) then
 		local alpha = 1 - ActionState.getPhaseAlpha(EndPunch.actionId)
-		return Vector3.new(0, 0, alpha * -50)
+		return Vector3.new(0, 0, alpha * -40)
 	end
 
 	return Vector3.new(0, 0, 0)

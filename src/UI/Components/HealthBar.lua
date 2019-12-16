@@ -103,8 +103,6 @@ function HealthBar:didUpdate(prevProps, prevState)
 		return
 	end
 
-	barRef.Visible = Health.isActive()
-
 	self.caughtUp = false
 
 	if newHealth > oldHealth then

@@ -7,6 +7,8 @@ local ActionPhases = import "Data/ActionPhases"
 local Animations = import "Client/Systems/Animations"
 local AnimationNames = import "Data/AnimationNames"
 
+local GetLocalCharacter = import "Utils/GetLocalCharacter"
+
 -- determine which attach we should be doing, delegate that action
 
 local Stagger = {}
@@ -14,7 +16,7 @@ Stagger.movementPriority = 1
 Stagger.actionId = ActionIds.STAGGER
 Stagger.phaseTimings = {
 	[ActionPhases.WINDUP] = 0,
-	[ActionPhases.ACTIVE] = 0.35,
+	[ActionPhases.ACTIVE] = 0.5,
 	[ActionPhases.COOLDOWN] = 0.25,
 }
 
@@ -28,10 +30,15 @@ function Stagger.validate()
 end
 
 function Stagger.init(initialState)
+	local char = GetLocalCharacter()
+
 	ActionState.setActionState(Stagger.actionId, {
 		startTime = tick(),
-		currentPhase = ActionPhases.WINDUP
+		currentPhase = ActionPhases.WINDUP,
+		headColor = char.Head.Color
 	})
+
+	char.Head.Color = Color3.fromRGB(255, 0, 0)
 
 	ActionState.stopActionsInMap({
 		[ActionIds.PUNCH] = true,
@@ -49,10 +56,14 @@ function Stagger.init(initialState)
 
 		return false
 	end)
+
+
 end
 
 function Stagger.step(state)
 	if ActionState.isComplete(Stagger.actionId) then
+		local char = GetLocalCharacter()
+		char.Head.Color = state.headColor
 		ActionState.setActionState(Stagger.actionId, nil)
 	end
 end

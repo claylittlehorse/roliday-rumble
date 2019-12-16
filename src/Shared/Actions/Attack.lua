@@ -15,7 +15,7 @@ local Attack = {}
 Attack.movementPriority = 0
 Attack.actionId = ActionIds.ATTACK
 
-local COMBO_LENGTH = 5
+local COMBO_LENGTH = 3
 local COMBO_TIMEOUT = 3
 
 function Attack.validate()
