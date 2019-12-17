@@ -11,6 +11,26 @@ local DamageReplication = {}
 
 local STAGGER_TIME = 0.5
 
+local function isValidAttacker(attackerState)
+	local isAlive = attackerState.health.currentHealth > 0
+	local isntKnockedOut = not attackerState.ko.isKnockedOut
+	local isntBeingCarried = attackerState.carrying.playerCarryingMe == nil
+	local isntCarrying = attackerState.carrying.playerImCarrying == nil
+	local hasntJustBeenDamaged = tick() - attackerState.health.lastDamagedTime < STAGGER_TIME
+
+	local isValid = isAlive and isntKnockedOut and isntBeingCarried and isntCarrying and hasntJustBeenDamaged
+	return isValid
+end
+
+local function isValidVictim(victimState)
+	local isAlive = victimState.health.currentHealth > 0
+	local isntKnockedOut = not victimState.ko.isKnockedOut
+	local isntBeingCarried = victimState.carrying.playerCarryingMe == nil
+
+	local isValid = isAlive and isntKnockedOut and isntBeingCarried
+	return isValid
+end
+
 function DamageReplication.start()
 	Network.createEvent(CombatEvents.REPLICATE_ACTION)
 	Network.createEvent(CombatEvents.REPLICATE_HEALTH)
@@ -23,11 +43,7 @@ function DamageReplication.start()
 		local attackerState = playerStates[attackerUserId]
 		local victimState = playerStates[victimUserId]
 
-		if attackerState and victimState then
-			if tick() - attackerState.health.lastDamagedTime < STAGGER_TIME then
-				return
-			end
-
+		if attackerState and victimState and isValidAttacker(attackerState) and isValidVictim(victimState) then
 			Sound.playSound("Hurt", victimState.characterModel.HumanoidRootPart.Position)
 			victimState.health.currentHealth = math.max(victimState.health.currentHealth - damage, 0)
 			victimState.health.lastDamagedTime = tick()

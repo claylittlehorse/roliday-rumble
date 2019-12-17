@@ -10,17 +10,18 @@ local Carrying = {}
 local function isCarrierValid(carrierState)
 	local isAlive = carrierState.health.currentHealth > 0
 	local isntKnockedOut = not carrierState.ko.isKnockedOut
-	local isntBeingCarried = not carrierState.carrying.isBeingCarried
+	local isntBeingCarried = carrierState.carrying.playerCarryingMe == nil
+	local isntCarrying = carrierState.carrying.playerImCarrying == nil
 
-	local isValid = isAlive and isntKnockedOut and isntBeingCarried
+	local isValid = isAlive and isntKnockedOut and isntBeingCarried and isntCarrying
 	return isValid
 end
 
 local function isCarriedValid(carriedState)
-	local isKnockedOut = not carriedState.ko.isKnockedOut
-	local isntBeingCarried = not carriedState.carrying.isBeingCarried
+	-- local isKnockedOut = not carriedState.ko.isKnockedOut -- TODO: Fix me
+	local isntBeingCarried = carriedState.carrying.playerCarryingMe == nil
 
-	local isValid = isKnockedOut and isntBeingCarried
+	local isValid = isntBeingCarried --and isKnockedOut
 	return isValid
 end
 
@@ -36,8 +37,8 @@ local function setNetworkOwner(carriedState, newOwnerPlayer)
 end
 
 local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, carriedState)
-	carriedState.carrying.isBeingCarried = true
-	carrierState.isCarrying = true
+	carriedState.carrying.playerCarryingMe = carrierPlayer
+	carrierState.playerImCarrying = carriedPlayer
 
 	setNetworkOwner(carriedState, carrierPlayer)
 
@@ -52,15 +53,20 @@ local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, car
 	local carriedRoot = carriedCharacter:FindFirstChild("HumanoidRootPart")
 	local baseCF = carrierRoot.CFrame
 
-	local carriedOffsetCF = baseCF * CFrame.new(0, 4, 0) * CFrame.Angles(math.pi, 0, math.pi / 2)
-	carriedPlayer:SetPrimaryPartCFrame(carriedOffsetCF)
+	local carriedOffsetCF = baseCF * CFrame.new(0, 3, 0) * CFrame.Angles(math.pi / 2, 0, math.pi / 2)
+	carriedCharacter:SetPrimaryPartCFrame(carriedOffsetCF)
 
 	carriedRoot.RootPriority = 1
 	carrierRoot.RootPriority = 2
 
+	local carriedHumanoid = carriedCharacter:FindFirstChild("Humanoid")
+	carriedHumanoid.PlatformStand = true
+
 	local weldConstraint = Instance.new("WeldConstraint")
+	weldConstraint.Name = "CarryingWeld"
 	weldConstraint.Part0 = carrierRoot
 	weldConstraint.Part1 = carriedRoot
+	weldConstraint.Parent = carrierRoot
 
 	carrierState.isCarrying = true
 	carrierState.carryingWeld = weldConstraint
@@ -81,6 +87,7 @@ function Carrying.start()
 		end
 
 		if not (isCarrierValid(carrierState) and isCarriedValid(carriedState)) then
+			print("carrier valid", isCarrierValid(carrierState), "carried", isCarriedValid(carriedState))
 			return
 		end
 

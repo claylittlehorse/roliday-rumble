@@ -22,11 +22,11 @@ local function getInitialState(player)
 			isKnockedOut = false,
 		},
 		carrying = {
-			isBeingCarried = false,
+			playerImCarrying = nil,
+			playerCarryingMe = nil,
 			lastCarriedTime = 0,
 			networkOwner = player,
 			carryingWeld = nil,
-			isCarrying = false,
 		}
 	}
 end

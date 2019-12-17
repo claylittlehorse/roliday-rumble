@@ -12,6 +12,7 @@ local loadOrder = {
 	"Server/Systems/DamageReplicator",
 	"Shared/Systems/Knockback",
 	"Shared/Systems/Sound",
+	"Server/Systems/ServerCarrying"
 }
 
 for _, path in ipairs(loadOrder) do

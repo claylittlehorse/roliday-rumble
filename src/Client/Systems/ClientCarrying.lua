@@ -54,7 +54,7 @@ local function onCharacterTouch(part)
 	end
 
 	pickupRequestTimes[userId] = tick()
-	Network.FireServer(CombatEvents.REQUEST_CARRY, player)
+	Network.fireServer(CombatEvents.REQUEST_CARRY, player)
 end
 
 local function setupCarrying(character)
