@@ -4,4 +4,6 @@ return {
 	REPLICATE_ACTION = "ReplicateAction",
 	REPLICATE_HEALTH = "ReplicateHealth",
 	REPLICATE_ACTIVE = "UpdateActive",
+
+	REQUEST_CARRY = "RequestCarry"
 }

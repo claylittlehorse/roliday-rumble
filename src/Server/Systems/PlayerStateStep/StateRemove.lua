@@ -17,13 +17,13 @@ function StateRemove.step(playerStates)
 			playerStates[userId] = nil
 			Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, false)
 			Network.fireClient(CombatEvents.REPLICATE_HEALTH, player, 0)
-		else
-			if playerState.health.currentHealth <= 0 then
-				playerStates[userId].characterModel.Humanoid.Health = 0
-				playerStates[userId] = nil
-				Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, false)
-			end
 		end
+		-- elseif playerState.health.currentHealth <= 0 then
+		-- 		playerStates[userId].characterModel.Humanoid.Health = 0
+		-- 		playerStates[userId] = nil
+		-- 		Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, false)
+		-- 	end
+		-- end
 	end
 end
 

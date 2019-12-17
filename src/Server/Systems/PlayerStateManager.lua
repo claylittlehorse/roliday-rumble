@@ -17,17 +17,16 @@ local function getInitialState(player)
 			lastDamagedTime = 0,
 			lastRegenedTime = 0,
 		},
-		knockDown = {
-			isKnockedDown = false,
-			lastKnockedDownTime = 0,
-			isRagdoll = false,
+		ko = {
+			knockedOutTime = 0,
+			isKnockedOut = false,
 		},
 		carrying = {
 			isBeingCarried = false,
 			lastCarriedTime = 0,
-			canBeCarried = false,
 			networkOwner = player,
-			carryingModel = nil,
+			carryingWeld = nil,
+			isCarrying = false,
 		}
 	}
 end
