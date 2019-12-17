@@ -68,7 +68,6 @@ function ActionQueue.start()
 		if carryInputState == Enum.UserInputState.Begin and carryUpdated then
 			for _, player in pairs(Players:GetPlayers()) do
 				if player ~= Players.LocalPlayer then
-					print("requesting", player)
 					Network.fireServer(CombatEvents.REQUEST_CARRY, player)
 				end
 			end

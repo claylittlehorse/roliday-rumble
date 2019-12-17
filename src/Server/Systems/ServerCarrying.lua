@@ -87,7 +87,6 @@ function Carrying.start()
 		end
 
 		if not (isCarrierValid(carrierState) and isCarriedValid(carriedState)) then
-			print("carrier valid", isCarrierValid(carrierState), "carried", isCarriedValid(carriedState))
 			return
 		end
 

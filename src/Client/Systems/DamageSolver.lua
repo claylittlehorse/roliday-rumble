@@ -81,7 +81,7 @@ function DamageSolver.start()
 					duration = KNOCKBACK_DURATION,
 					shouldKnockdown = _currentDamage.shouldKnockdown
 				})
-				print("shld kdown", _currentDamage.shouldKnockdown)
+
 				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, {
 					damage = _currentDamage.damageAmount,
 					knockback = knockbackModel

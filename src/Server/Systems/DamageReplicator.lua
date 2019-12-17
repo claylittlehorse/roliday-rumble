@@ -52,14 +52,13 @@ function DamageReplication.start()
 			victimState.health.currentHealth = math.max(victimState.health.currentHealth - damage, 0)
 			if victimState.health.currentHealth <= 0 then
 				knockback.shouldKnockOut = true
+			elseif not knockback.shouldKnockdown then
+				Network.fireClient(CombatEvents.REPLICATE_ACTION, victimPlayer, ActionIds.STAGGER)
 			end
-			victimState.health.lastDamagedTime = tick()
-			Network.fireClient(CombatEvents.REPLICATE_ACTION, victimPlayer, ActionIds.STAGGER)
-			Network.fireClient(CombatEvents.REPLICATE_HEALTH, victimPlayer, victimState.health.currentHealth)
 
+			victimState.health.lastDamagedTime = tick()
+			Network.fireClient(CombatEvents.REPLICATE_HEALTH, victimPlayer, victimState.health.currentHealth)
 			Network.fireClient(CombatEvents.REPLICATE_KNOCKBACK, victimPlayer, knockback)
-		else
-			print("attacker", isValidAttacker(attackerState), "victim", isValidVictim(victimState))
 		end
 	end)
 end

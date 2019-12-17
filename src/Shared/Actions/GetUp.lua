@@ -20,7 +20,7 @@ GetUp.phaseTimings = {
 }
 
 function GetUp.validate()
-	local isKnockedOut = ActionState.hasAction(ActionIds.KNOCKDOWN)
+	local isKnockedOut = ActionState.hasAction(ActionIds.KNOCKOUT)
 	local isFallenDown = ActionState.hasAction(ActionIds.FALLDOWN)
 
 	return isKnockedOut or isFallenDown
