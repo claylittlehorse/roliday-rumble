@@ -52,17 +52,11 @@ function GetUp.init(initialState)
 	})
 end
 
-function GetUp.step(state)
-	local character = GetLocalCharacter()
+function GetUp.step(state, character)
 	local humanoid = character:FindFirstChild("Humanoid")
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	if not (humanoid and rootPart) then
-		ActionState.setActionState(GetUp.actionId, nil)
-		return
-	end
 
 	rootPart.CFrame = rootPart.CFrame:Lerp(state.targetCF, 0.5)
-
 	if ActionState.isComplete(GetUp.actionId) then
 		rootPart.CFrame = state.targetCF
 		humanoid.PlatformStand = false

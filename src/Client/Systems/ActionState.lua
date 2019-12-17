@@ -6,6 +6,9 @@ local Actions = import "Shared/Actions"
 local ActionPhases = import "Data/ActionPhases"
 local StepOrder = import "Data/StepOrder"
 
+local GetLocalCharacter = import "Utils/GetLocalCharacter"
+local IsValidCharacter = import "GameUtils/IsValidCharacter"
+
 local ActionState = {}
 local _actionStates = {}
 
@@ -127,6 +130,11 @@ end
 
 function ActionState.start()
 	RunService:BindToRenderStep("ActionState", StepOrder.ACTION_STATE, function()
+		local character = GetLocalCharacter()
+		if not IsValidCharacter(character) then
+			_actionStates = {}
+		end
+
 		for actionId, actionState in pairs(_actionStates) do
 			local action = Actions[actionId]
 			action.step(actionState)

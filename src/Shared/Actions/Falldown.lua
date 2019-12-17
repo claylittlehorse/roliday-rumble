@@ -64,15 +64,7 @@ function Falldown.init(initialState)
 	end)
 end
 
-function Falldown.step(state)
-	local character = GetLocalCharacter()
-	local humanoid = character:FindFirstChild("Humanoid")
-	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	if not (humanoid and rootPart) then
-		ActionState.setActionState(Falldown.actionId, nil)
-		return
-	end
-
+function Falldown.step(state, character)
 	if ActionState.isComplete(Falldown.actionId) then
 		ActionQueue.queueAction(ActionIds.GET_UP)
 	end

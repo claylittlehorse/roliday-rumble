@@ -51,15 +51,8 @@ function Knockout.init(initialState)
 	-- end)
 end
 
-function Knockout.step(state)
-	local character = GetLocalCharacter()
-	local humanoid = character:FindFirstChild("Humanoid")
+function Knockout.step(state, character)
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	if not (humanoid and rootPart) then
-		ActionState.setActionState(Knockout.actionId, nil)
-		return
-	end
-
 	local elapsed = tick() - state.startTime
 
 	if elapsed < 1 then
