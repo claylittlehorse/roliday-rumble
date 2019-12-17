@@ -2,7 +2,9 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 
 local ActionIds = import "Data/ActionIds"
 local ActionState = import "Client/Systems/ActionState"
+local ActionQueue = import "Client/Systems/ActionQueue"
 local ActionPhases = import "Data/ActionPhases"
+
 
 local Animations = import "Client/Systems/Animations"
 local AnimationNames = import "Data/AnimationNames"
@@ -71,22 +73,8 @@ function Falldown.step(state)
 		return
 	end
 
-	if ActionState.isCooldown(Falldown.actionId) and not state.targetCF then
-		local targetLookVector = (rootPart.CFrame.UpVector * Vector3.new(1, 0, 1)).unit
-		if rootPart.CFrame.LookVector.Y > 0 then
-			targetLookVector = targetLookVector * -1
-		end
-		local newPos = rootPart.Position + Vector3.new(0, 2, 0)
-		state.targetCF = CFrame.new(newPos, newPos+targetLookVector)
-	elseif ActionState.isCooldown(Falldown.actionId) then
-		rootPart.CFrame = rootPart.CFrame:Lerp(state.targetCF, 0.5)
-	end
-
 	if ActionState.isComplete(Falldown.actionId) then
-		rootPart.CFrame = state.targetCF
-		humanoid.PlatformStand = false
-
-		ActionState.setActionState(Falldown.actionId, nil)
+		ActionQueue.queueAction(ActionIds.GET_UP)
 	end
 end
 

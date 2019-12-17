@@ -14,11 +14,8 @@ Knockout.movementPriority = 1
 Knockout.actionId = ActionIds.KNOCKOUT
 
 function Knockout.validate()
-	-- local isNotKnockedOut = not ActionState.hasAction(Knockout.actionId)
-
-	-- return isNotKnockedOut
-
-	return true
+	local isNotKnockedOut = not ActionState.hasAction(Knockout.actionId)
+	return isNotKnockedOut
 end
 
 function Knockout.init(initialState)

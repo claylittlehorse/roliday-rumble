@@ -6,5 +6,7 @@ return {
 	END_PUNCH = "EndPunch",
 
 	STAGGER = "Stagger",
-	KNOCKOUT = "Knockout"
+	KNOCKOUT = "Knockout",
+
+	GET_UP = "GetUp",
 }

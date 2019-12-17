@@ -128,6 +128,7 @@ end
 function ActionState.start()
 	RunService:BindToRenderStep("ActionState", StepOrder.ACTION_STATE, function()
 		for actionId, actionState in pairs(_actionStates) do
+			print(actionId)
 			local action = Actions[actionId]
 			action.step(actionState)
 		end
