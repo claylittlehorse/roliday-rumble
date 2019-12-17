@@ -38,27 +38,22 @@ function Knockback.getKnockbackVelocity()
 end
 
 function Knockback.start()
-	if IS_SERVER then
-		Network.hookEvent(REPLICATE_KNOCKBACK, function(player, knockback, victim, shouldKnockdown)
-			--Update tick since the client tick will be wrong on server
-			knockback.startTime = tick()
-			Knockback.applyKnockback(knockback, victim, shouldKnockdown)
-		end)
-	end
+	Network.hookEvent(REPLICATE_KNOCKBACK, function(knockback)
+		if knockback.shouldKnockOut then
+			ActionQueue.queueAction(ActionIds.KNOCKOUT, {
+				velocity = knockback.speed * knockback.direction
+			})
+			return
+		elseif knockback.shouldKnockDown then
+			ActionQueue.queueAction(ActionIds.FALLDOWN, {
+				velocity = knockback.speed * knockback.direction
+			})
+			return
+		end
 
-	if IS_CLIENT then
-		Network.hookEvent(REPLICATE_KNOCKBACK, function(knockback, shouldKnockdown)
-			if shouldKnockdown then
-				ActionQueue.queueAction(ActionIds.FALLDOWN, {
-					velocity = knockback.speed * knockback.direction
-				})
-				return
-			end
-
-			knockback.startTime = tick()
-			_clientKnockbackForces[#_clientKnockbackForces+1] = knockback
-		end)
-	end
+		knockback.startTime = tick()
+		_clientKnockbackForces[#_clientKnockbackForces+1] = knockback
+	end)
 end
 
 return Knockback

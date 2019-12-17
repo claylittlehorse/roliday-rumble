@@ -10,7 +10,6 @@ local loadOrder = {
 	"Server/Systems/PlayerStateStep",
 	"Server/Systems/GameLoop",
 	"Server/Systems/DamageReplicator",
-	"Shared/Systems/Knockback",
 	"Shared/Systems/Sound",
 	"Server/Systems/ServerCarrying"
 }

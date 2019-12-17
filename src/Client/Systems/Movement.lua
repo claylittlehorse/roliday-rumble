@@ -7,7 +7,7 @@ local localPlayer = Players.LocalPlayer
 local StepOrder = import "Data/StepOrder"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local ActionState = import "Client/Systems/ActionState"
-local Knockback = import "Shared/Systems/Knockback"
+local Knockback = import "Client/Systems/Knockback"
 
 local Movement = {}
 local _setupCharacter = nil

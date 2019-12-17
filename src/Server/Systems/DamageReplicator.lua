@@ -16,7 +16,7 @@ local function isValidAttacker(attackerState)
 	local isntKnockedOut = not attackerState.ko.isKnockedOut
 	local isntBeingCarried = attackerState.carrying.playerCarryingMe == nil
 	local isntCarrying = attackerState.carrying.playerImCarrying == nil
-	local hasntJustBeenDamaged = tick() - attackerState.health.lastDamagedTime < STAGGER_TIME
+	local hasntJustBeenDamaged = tick() - attackerState.health.lastDamagedTime > STAGGER_TIME
 
 	local isValid = isAlive and isntKnockedOut and isntBeingCarried and isntCarrying and hasntJustBeenDamaged
 	return isValid
@@ -34,8 +34,12 @@ end
 function DamageReplication.start()
 	Network.createEvent(CombatEvents.REPLICATE_ACTION)
 	Network.createEvent(CombatEvents.REPLICATE_HEALTH)
+	Network.createEvent(CombatEvents.REPLICATE_KNOCKBACK)
 
-	Network.hookEvent(CombatEvents.REPLICATE_DAMAGE, function(attackerPlayer, victimPlayer, damage)
+	Network.hookEvent(CombatEvents.REPLICATE_DAMAGE, function(attackerPlayer, victimPlayer, payload)
+		local damage = payload.damage
+		local knockback = payload.knockback
+
 		local playerStates = PlayerStateManager.getPlayerStates()
 		local attackerUserId = tostring(attackerPlayer.UserId)
 		local victimUserId = tostring(victimPlayer.UserId)
@@ -46,9 +50,16 @@ function DamageReplication.start()
 		if attackerState and victimState and isValidAttacker(attackerState) and isValidVictim(victimState) then
 			Sound.playSound("Hurt", victimState.characterModel.HumanoidRootPart.Position)
 			victimState.health.currentHealth = math.max(victimState.health.currentHealth - damage, 0)
+			if victimState.health.currentHealth <= 0 then
+				knockback.shouldKnockOut = true
+			end
 			victimState.health.lastDamagedTime = tick()
 			Network.fireClient(CombatEvents.REPLICATE_ACTION, victimPlayer, ActionIds.STAGGER)
 			Network.fireClient(CombatEvents.REPLICATE_HEALTH, victimPlayer, victimState.health.currentHealth)
+
+			Network.fireClient(CombatEvents.REPLICATE_KNOCKBACK, victimPlayer, knockback)
+		else
+			print("attacker", isValidAttacker(attackerState), "victim", isValidVictim(victimState))
 		end
 	end)
 end

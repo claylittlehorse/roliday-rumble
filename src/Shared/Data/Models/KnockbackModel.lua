@@ -1,11 +1,12 @@
 local KnockbackModel = {}
 
-function KnockbackModel.new(direction, speed, duration)
+function KnockbackModel.new(options)
 	return {
-		direction = direction,
-		speed = speed,
-		duration = duration,
+		direction = options.direction,
+		speed = options.speed,
+		duration = options.duration,
 		startTime = tick(),
+		shouldKnockdown = options.shouldKnockdown,
 	}
 end
 
@@ -15,6 +16,7 @@ function KnockbackModel.applyScalarModifier(knockback, modifierValue)
 		speed = knockback.speed * modifierValue,
 		duration = knockback.duration * modifierValue,
 		startTime = knockback.startTime,
+		shouldKnockdown = knockback.shouldKnockdown,
 	}
 end
 

@@ -12,10 +12,10 @@ AttackDamage.__index = AttackDamage
 function AttackDamage.new(actionId, shouldKnockdown)
     local self = {
 		actionId = actionId,
-		damageAmount = 10,
+		damageAmount = 100,
 		isActive = true,
-		shouldKnockdown = shouldKnockdown,
-		damagedThings = {}
+		damagedThings = {},
+		shouldKnockdown = shouldKnockdown
 	}
     return setmetatable(self, AttackDamage)
 end

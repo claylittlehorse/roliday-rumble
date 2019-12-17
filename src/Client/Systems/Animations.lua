@@ -11,6 +11,7 @@ local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local AnimationNames = import "Data/AnimationNames"
 local AttackAnim = import "Assets/Animations/AttackAnim"
 local CarryingAnim = import "Assets/Animations/CarryingAnim"
+local FlailAnim = import "Assets/Animations/FlailAnim"
 
 local animationsToLoad = {
 	[AnimationNames.ATTACK] = {
@@ -24,6 +25,13 @@ local animationsToLoad = {
 		weight = 10,
 		priority = Enum.AnimationPriority.Action,
 		looped = true,
+	},
+	[AnimationNames.FLAIL] = {
+		anim = FlailAnim,
+		weight = 10,
+		priority = Enum.AnimationPriority.Action,
+		looped = true,
+		speed = 2,
 	}
 }
 
@@ -38,6 +46,7 @@ local function loadAnimations(character)
 	for animName, animInfo in pairs(animationsToLoad) do
 		local loadAnim = humanoid:LoadAnimation(animInfo.anim)
 		loadAnim:AdjustWeight(animInfo.weight)
+		loadAnim:AdjustSpeed(animInfo.speed or 1)
 		loadAnim.Priority = animInfo.priority
 		loadAnim.Looped = animInfo.looped
 

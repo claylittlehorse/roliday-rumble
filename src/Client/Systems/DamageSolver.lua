@@ -8,7 +8,7 @@ local ColliderFromCharacter = import "GameUtils/ColliderFromCharacter"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local GetLocalCharacter = import "Utils/GetLocalCharacter"
 
-local Knockback = import "Shared/Systems/Knockback"
+-- local Knockback = import "Shared/Systems/Knockback"
 local KnockbackModel = import "Data/Models/KnockbackModel"
 
 local Network = import "Network"
@@ -75,9 +75,16 @@ function DamageSolver.start()
 			if canDamageThing(_currentDamage, victimPlayer, victimCollider) then
 				local rootPart = character:FindFirstChild("HumanoidRootPart")
 
-				local knockbackModel = KnockbackModel.new(rootPart.CFrame.LookVector, KNOCKBACK_SPEED, KNOCKBACK_LENGTH)
-				Knockback.applyKnockback(knockbackModel, victimPlayer, _currentDamage.shouldKnockdown)
-				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, _currentDamage.damageAmount)
+				local knockbackModel = KnockbackModel.new({
+					direction = rootPart.CFrame.LookVector,
+					speed = KNOCKBACK_SPEED,
+					length = KNOCKBACK_LENGTH,
+					shouldKnockdown = _currentDamage.shouldKnockdown
+				})
+				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, {
+					damage = _currentDamage.damageAmount,
+					knockback = knockbackModel
+				})
 				_currentDamage:onThingDamaged(victimPlayer)
 			end
 		end
