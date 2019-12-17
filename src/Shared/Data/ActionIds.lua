@@ -9,4 +9,7 @@ return {
 	KNOCKOUT = "Knockout",
 
 	GET_UP = "GetUp",
+
+	CARRY = "Carry",
+	DROP = "Drop",
 }
