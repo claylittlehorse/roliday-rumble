@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 
 local StateRemove = import "./StateRemove"
 local HealthRegen = import "./HealthRegen"
+local KnockOut = import "./KnockOut"
 
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 
@@ -14,6 +15,7 @@ function PlayerStateStep.start()
 		local playerStates = PlayerStateManager.getPlayerStates()
 
 		StateRemove.step(playerStates)
+		KnockOut.step(playerStates)
 		HealthRegen.step(playerStates)
 	end)
 end
