@@ -74,20 +74,20 @@ function Punch.step(state)
 end
 
 function Punch.changeSpeed(baseSpeed)
-	if ActionState.isActive(Punch.actionId) then
-		return baseSpeed / 5
-	elseif ActionState.isCooldown(Punch.actionId) then
-		return baseSpeed / 2
-	end
+	-- if ActionState.isActive(Punch.actionId) then
+	-- 	return baseSpeed / 5
+	-- elseif ActionState.isCooldown(Punch.actionId) then
+	-- 	return baseSpeed / 2
+	-- end
 
 	return baseSpeed
 end
 
 function Punch.addVelocity()
-	if ActionState.isActive(Punch.actionId) then
-		local alpha = 1 - ActionState.getPhaseAlpha(Punch.actionId)
-		return Vector3.new(0, 0, alpha * -20)
-	end
+	-- if ActionState.isActive(Punch.actionId) then
+	-- 	local alpha = 1 - ActionState.getPhaseAlpha(Punch.actionId)
+	-- 	return Vector3.new(0, 0, alpha * -20)
+	-- end
 
 	return Vector3.new(0, 0, 0)
 end

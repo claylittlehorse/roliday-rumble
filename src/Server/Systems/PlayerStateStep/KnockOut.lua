@@ -1,12 +1,10 @@
-local import = require(game.ReplicatedStorage.Lib.Import)
-
 local KnockOut = {}
 local recoverThresholdHeath = 20
 
 function KnockOut.step(playerStates)
-	for userId, playerState in pairs(playerStates) do
+	for _, playerState in pairs(playerStates) do
 		local isDead = playerState.health.currentHealth <= 0
-		local isNotKnockedOut = playerState.ko.isKnockedOut
+		local isNotKnockedOut = not playerState.ko.isKnockedOut
 
 		if isDead and isNotKnockedOut then
 			playerState.ko.isKnockedOut = true

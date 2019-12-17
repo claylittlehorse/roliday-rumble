@@ -17,7 +17,7 @@ local EndPunch = {}
 EndPunch.movementPriority = 1
 EndPunch.actionId = ActionIds.END_PUNCH
 EndPunch.phaseTimings = {
-	[ActionPhases.WINDUP] = 0.3,
+	[ActionPhases.WINDUP] = 0.1,
 	[ActionPhases.ACTIVE] = 0.3,
 	[ActionPhases.COOLDOWN] = 0.5,
 }

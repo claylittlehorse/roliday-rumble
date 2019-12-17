@@ -17,7 +17,7 @@ local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 local StepOrder = import "Data/StepOrder"
 
 local KNOCKBACK_SPEED = 30
-local KNOCKBACK_LENGTH = 0.3
+local KNOCKBACK_DURATION = 0.3
 
 local DamageSolver = {}
 local _currentDamage = nil
@@ -78,9 +78,10 @@ function DamageSolver.start()
 				local knockbackModel = KnockbackModel.new({
 					direction = rootPart.CFrame.LookVector,
 					speed = KNOCKBACK_SPEED,
-					length = KNOCKBACK_LENGTH,
+					duration = KNOCKBACK_DURATION,
 					shouldKnockdown = _currentDamage.shouldKnockdown
 				})
+				print("shld kdown", _currentDamage.shouldKnockdown)
 				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, {
 					damage = _currentDamage.damageAmount,
 					knockback = knockbackModel

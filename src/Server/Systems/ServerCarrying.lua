@@ -18,10 +18,10 @@ local function isCarrierValid(carrierState)
 end
 
 local function isCarriedValid(carriedState)
-	-- local isKnockedOut = not carriedState.ko.isKnockedOut -- TODO: Fix me
+	local isKnockedOut =  carriedState.ko.isKnockedOut
 	local isntBeingCarried = carriedState.carrying.playerCarryingMe == nil
 
-	local isValid = isntBeingCarried --and isKnockedOut
+	local isValid = isntBeingCarried and isKnockedOut
 	return isValid
 end
 

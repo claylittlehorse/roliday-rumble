@@ -44,7 +44,7 @@ function Knockback.start()
 				velocity = knockback.speed * knockback.direction
 			})
 			return
-		elseif knockback.shouldKnockDown then
+		elseif knockback.shouldKnockdown then
 			ActionQueue.queueAction(ActionIds.FALLDOWN, {
 				velocity = knockback.speed * knockback.direction
 			})

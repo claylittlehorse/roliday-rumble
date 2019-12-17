@@ -14,9 +14,11 @@ Knockout.movementPriority = 1
 Knockout.actionId = ActionIds.KNOCKOUT
 
 function Knockout.validate()
-	local isNotKnockedOut = not ActionState.hasAction(Knockout.actionId)
+	-- local isNotKnockedOut = not ActionState.hasAction(Knockout.actionId)
 
-	return isNotKnockedOut
+	-- return isNotKnockedOut
+
+	return true
 end
 
 function Knockout.init(initialState)
@@ -28,13 +30,14 @@ function Knockout.init(initialState)
 	end
 	humanoid.PlatformStand = true
 
-	local flingVelocity = initialState.velocity + Vector3.new(0, 140, 0)
-	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit)
-	rootPart.RotVelocity = rotVelocity * 30
-	rootPart.Velocity = flingVelocity.unit * 65
+	local flingVelocity = initialState.velocity + Vector3.new(0, 100, 0)
+	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit) * 15
+	rootPart.RotVelocity = rotVelocity
+	rootPart.Velocity = flingVelocity.unit * 70
 
 	ActionState.setActionState(Knockout.actionId, {
 		startTime = tick(),
+		rotVel = rotVelocity,
 	})
 
 	-- Animations.playAnimation(AnimationNames.CARRYING, function(anim)
@@ -58,6 +61,13 @@ function Knockout.step(state)
 	if not (humanoid and rootPart) then
 		ActionState.setActionState(Knockout.actionId, nil)
 		return
+	end
+
+	local elapsed = tick() - state.startTime
+
+	if elapsed < 1 then
+		local topSpinVel = (rootPart.CFrame.UpVector * 20)
+		rootPart.RotVelocity = state.rotVel + topSpinVel
 	end
 end
 
