@@ -4,6 +4,8 @@ local ActionIds = import "Data/ActionIds"
 local ActionState = import "Client/Systems/ActionState"
 
 local GetLocalCharacter = import "Utils/GetLocalCharacter"
+local ThrownPlayerDamage = import "Shared/Damages/ThrownPlayerDamage"
+local DamageSolver = import "Client/Systems/DamageSolver"
 
 local Drop = {}
 Drop.movementPriority = 0
@@ -25,6 +27,8 @@ function Drop.init(initialState)
 	if carryingPart and initialState.throw then
 		carryingPart.Velocity = Vector3.new(0, 30, 0) + rootPart.CFrame.lookVector * 40
 		carryingPart.RotVelocity = -rootPart.CFrame.RightVector * 15 + Vector3.new(0, 3, 0)
+		local damage = ThrownPlayerDamage.new(carryingPart.Parent)
+		DamageSolver.addDamage(damage)
 	elseif carryingPart then
 		carryingPart.Velocity = Vector3.new(0, 40, 0) + rootPart.CFrame.lookVector * 10
 		carryingPart.RotVelocity = -rootPart.CFrame.RightVector * 5 + Vector3.new(0, 20, 0)

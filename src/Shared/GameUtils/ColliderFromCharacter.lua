@@ -8,6 +8,7 @@ local SphereColliderModel = import "Data/Models/SphereColliderModel"
 
 local CHAR_CAPSULE = CapsuleColliderModel.new(Vector3.new(), Vector3.new(0, HitboxConstants.PLAYER_HEIGHT, 0), HitboxConstants.PLAYER_RADIUS)
 local DAMAGE_SPHERE = SphereColliderModel.new(HitboxConstants.ATTACK_OFFSET, HitboxConstants.ATTACK_RADIUS)
+local THROWN_CAPSULE = CapsuleColliderModel.new(Vector3.new(), Vector3.new(0, HitboxConstants.PLAYER_HEIGHT, 0), HitboxConstants.PLAYER_RADIUS * 1.5)
 
 local function getFootCF(character)
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
@@ -21,6 +22,11 @@ end
 
 function ColliderFromCharacter.characterCollider(character)
 	local hitBox = CapsuleColliderModel.fromCFrame(CHAR_CAPSULE, getFootCF(character))
+	return hitBox
+end
+
+function ColliderFromCharacter.thrownCharacterCollider(character)
+	local hitBox = CapsuleColliderModel.fromCFrame(THROWN_CAPSULE, getFootCF(character))
 	return hitBox
 end
 

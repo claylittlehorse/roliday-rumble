@@ -59,7 +59,10 @@ end
 
 function Knockout.step(state, character)
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	local humanoid = character:FindFirstChild("Humanoid")
 	local elapsed = tick() - state.startTime
+
+	humanoid.PlatformStand = true
 
 	if elapsed < 1 then
 		local topSpinVel = (rootPart.CFrame.UpVector * 20)

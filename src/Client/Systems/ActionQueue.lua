@@ -57,23 +57,28 @@ function ActionQueue.start()
 			ActionQueue.queueAction(ActionIds.ATTACK)
 		end
 
-		local _, falldownInputState = Input.readBoundAction("FallDown")
-		if falldownInputState == Enum.UserInputState.Begin then
-			ActionQueue.queueAction(ActionIds.KNOCKOUT, {
-				velocity = (workspace.CurrentCamera.CFrame.LookVector * Vector3.new(1, 0, 1)) * 30
-			})
-		end
+		ActionQueue.step()
+
+		-- local _, falldownInputState = Input.readBoundAction("FallDown")
+		-- if falldownInputState == Enum.UserInputState.Begin then
+		-- 	ActionQueue.queueAction(ActionIds.KNOCKOUT, {
+		-- 		velocity = (workspace.CurrentCamera.CFrame.LookVector * Vector3.new(1, 0, 1)) * 30
+		-- 	})
+		-- end
 
 		local carryUpdated, carryInputState = Input.readBoundAction("Carry")
 		if carryInputState == Enum.UserInputState.Begin and carryUpdated then
 			for _, player in pairs(Players:GetPlayers()) do
 				if player ~= Players.LocalPlayer then
-					Network.fireServer(CombatEvents.REQUEST_CARRY, player)
+					local char = player.Character
+					local humanoid = char:FindFirstChild("Humanoid")
+					local dist = (Players.LocalPlayer.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).magnitude
+					if humanoid and dist < 8 then
+						Network.fireServer(CombatEvents.REQUEST_CARRY, player)
+					end
 				end
 			end
 		end
-
-		ActionQueue.step()
 	end)
 end
 

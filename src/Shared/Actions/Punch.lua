@@ -65,7 +65,7 @@ function Punch.step(state)
 	if phaseChanged and ActionState.isActive(Punch.actionId) then
 		Sound.playAtCharacter("Swing")
 		local damage = AttackDamage.new(Punch.actionId)
-		DamageSolver.setCurrentDamage(damage)
+		DamageSolver.addDamage(damage)
 	end
 
 	if ActionState.isComplete(Punch.actionId) then

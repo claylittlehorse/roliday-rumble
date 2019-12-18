@@ -20,7 +20,7 @@ local KNOCKBACK_SPEED = 30
 local KNOCKBACK_DURATION = 0.3
 
 local DamageSolver = {}
-local _currentDamage = nil
+local damages = {}
 
 local function getCharacter(player)
 	local character = player.Character
@@ -54,39 +54,40 @@ local function canDamageThing(damage, thing, thingCollider)
 	return false
 end
 
-function DamageSolver.setCurrentDamage(damage)
-	_currentDamage = damage
+function DamageSolver.addDamage(damage)
+	damages[#damages+1] = damage
 end
 
 function DamageSolver.start()
 	RunService:BindToRenderStep("DamageStep", StepOrder.DAMAGE, function()
 		local character = GetLocalCharacter()
-		if not (character and IsValidCharacter(character)) or not _currentDamage then
-			return
-		end
-
-		if _currentDamage:shouldCleanup() then
-			_currentDamage = nil
+		if not (character and IsValidCharacter(character) and #damages > 0) then
 			return
 		end
 
 		for _, victimPlayer in ipairs(getDamageablePlayers()) do
 			local victimCollider = ColliderFromCharacter.characterCollider(victimPlayer.Character)
-			if canDamageThing(_currentDamage, victimPlayer, victimCollider) then
-				local rootPart = character:FindFirstChild("HumanoidRootPart")
+			for i = #damages, 1, -1 do
+				local damage = damages[i]
+				if damage:shouldCleanup() then
+					table.remove(damages, i)
+					return
+				elseif canDamageThing(damage, victimPlayer, victimCollider) then
+					local rootPart = character:FindFirstChild("HumanoidRootPart")
 
-				local knockbackModel = KnockbackModel.new({
-					direction = rootPart.CFrame.LookVector,
-					speed = KNOCKBACK_SPEED,
-					duration = KNOCKBACK_DURATION,
-					shouldKnockdown = _currentDamage.shouldKnockdown
-				})
+					local knockbackModel = KnockbackModel.new({
+						direction = rootPart.CFrame.LookVector,
+						speed = KNOCKBACK_SPEED,
+						duration = KNOCKBACK_DURATION,
+						shouldKnockdown = damage.shouldKnockdown
+					})
 
-				Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, {
-					damage = _currentDamage.damageAmount,
-					knockback = knockbackModel
-				})
-				_currentDamage:onThingDamaged(victimPlayer)
+					Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, {
+						damage = damage.damageAmount,
+						knockback = knockbackModel
+					})
+					damage:onThingDamaged(victimPlayer)
+				end
 			end
 		end
 	end)

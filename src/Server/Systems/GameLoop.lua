@@ -45,7 +45,7 @@ function GameLoop.start()
 		while wait(1) do
 			if not isGameRunning then
 				local charCount = countValidCharacters()
-				if charCount >= 2 then
+				if charCount >= 2 and charCount == #Players:GetPlayers() then
 					isGameRunning = true
 					PlayerStateManager.resetPlayerStates()
 				end

@@ -65,7 +65,7 @@ function EndPunch.step(state)
 			return false
 		end)
 		local damage = AttackDamage.new(EndPunch.actionId, true)
-		DamageSolver.setCurrentDamage(damage)
+		DamageSolver.addDamage(damage)
 	end
 
 	if ActionState.isComplete(EndPunch.actionId) then
