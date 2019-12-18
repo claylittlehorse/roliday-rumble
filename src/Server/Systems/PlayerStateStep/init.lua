@@ -5,6 +5,7 @@ local RunService = game:GetService("RunService")
 local StateRemove = import "./StateRemove"
 local HealthRegen = import "./HealthRegen"
 local KnockOut = import "./KnockOut"
+local ReconcileCarry = import "./ReconcileCarry"
 
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 
@@ -14,6 +15,7 @@ function PlayerStateStep.start()
 	RunService.Heartbeat:Connect(function()
 		local playerStates = PlayerStateManager.getPlayerStates()
 
+		ReconcileCarry.step(playerStates)
 		StateRemove.step(playerStates)
 		KnockOut.step(playerStates)
 		HealthRegen.step(playerStates)

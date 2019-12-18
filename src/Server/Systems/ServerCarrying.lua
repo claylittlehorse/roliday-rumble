@@ -38,7 +38,7 @@ end
 
 local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, carriedState)
 	carriedState.carrying.playerCarryingMe = carrierPlayer
-	carrierState.playerImCarrying = carriedPlayer
+	carrierState.carrying.playerImCarrying = carriedPlayer
 
 	setNetworkOwner(carriedState, carrierPlayer)
 
@@ -69,7 +69,8 @@ local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, car
 	weldConstraint.Parent = carrierRoot
 
 	carrierState.isCarrying = true
-	carrierState.carryingWeld = weldConstraint
+	carrierState.carrying.carryingWeld = weldConstraint
+	carriedState.carrying.carryingWeld = weldConstraint
 end
 
 function Carrying.start()

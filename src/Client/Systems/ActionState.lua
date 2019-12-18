@@ -137,7 +137,7 @@ function ActionState.start()
 
 		for actionId, actionState in pairs(_actionStates) do
 			local action = Actions[actionId]
-			action.step(actionState)
+			action.step(actionState, character)
 		end
 	end)
 end

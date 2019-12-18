@@ -1,6 +1,10 @@
 local Workspace = game:GetService("Workspace")
 
 local function IsValidCharacter(character)
+	if not character then
+		return false
+	end
+
 	local isInWorkspace = character:IsDescendantOf(Workspace)
 	local humanoid = character:FindFirstChild("Humanoid")
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
