@@ -2,8 +2,11 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 
 local Network = import "Network"
 local CombatEvents = import "Data/NetworkEvents/CombatEvents"
+local ActionIds = import "Data/ActionIds"
+
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
+local SetCharacterOwnership = import "GameUtils/SetCharacterOwnership"
 
 local Carrying = {}
 
@@ -25,22 +28,13 @@ local function isCarriedValid(carriedState)
 	return isValid
 end
 
-local function setNetworkOwner(carriedState, newOwnerPlayer)
-	local descendants = carriedState.characterModel:GetDescendants()
-	for _, descendant in pairs(descendants) do
-		if descendant:IsA("BasePart") then
-			descendant:SetNetworkOwner(newOwnerPlayer)
-		end
-	end
 
-	carriedState.carrying.networkOwner = newOwnerPlayer
-end
 
 local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, carriedState)
 	carriedState.carrying.playerCarryingMe = carrierPlayer
 	carrierState.carrying.playerImCarrying = carriedPlayer
 
-	setNetworkOwner(carriedState, carrierPlayer)
+	SetCharacterOwnership(carriedState, carrierPlayer)
 
 	local carrierCharacter = carrierPlayer.Character
 	local carriedCharacter = carriedPlayer.Character
@@ -68,9 +62,17 @@ local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, car
 	weldConstraint.Part1 = carriedRoot
 	weldConstraint.Parent = carrierRoot
 
+	weldConstraint:GetPropertyChangedSignal("Parent"):Connect(function()
+		SetCharacterOwnership(carriedState, carrierPlayer)
+	end)
+
 	carrierState.isCarrying = true
 	carrierState.carrying.carryingWeld = weldConstraint
 	carriedState.carrying.carryingWeld = weldConstraint
+
+	Network.fireClient(CombatEvents.REPLICATE_ACTION, carrierPlayer, ActionIds.CARRY, {
+		weld = weldConstraint
+	})
 end
 
 function Carrying.start()

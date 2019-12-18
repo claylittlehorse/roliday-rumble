@@ -7,6 +7,8 @@ local CombatState = import "Client/Systems/CombatState"
 
 local Punch = import "Shared/Actions/Punch"
 local EndPunch = import "Shared/Actions/EndPunch"
+local Drop = import "Shared/Actions/Drop"
+
 local Health = import "Client/Systems/Health"
 
 -- determine which attach we should be doing, delegate that action
@@ -29,7 +31,8 @@ function Attack.validate()
 	})
 
 	local isNotKnockedDown = not ActionState.hasAction(ActionIds.FALLDOWN)
-	if isNotAttacking and isNotKnockedDown then
+	local isNotKnockedOut = not ActionState.hasAction(ActionIds.KNOCKOUT)
+	if isNotAttacking and isNotKnockedDown and isNotKnockedOut then
 		return true
 	end
 
@@ -37,6 +40,13 @@ function Attack.validate()
 end
 
 function Attack.init(initialState)
+	local isCarrying = ActionState.hasAction(ActionIds.CARRY)
+	if isCarrying then
+		Drop.init({
+			throw = true
+		})
+	end
+
 	local elapsedTime = tick() - CombatState.lastAttackTime
 	CombatState.lastAttackTime = tick()
 	if elapsedTime > COMBO_TIMEOUT then

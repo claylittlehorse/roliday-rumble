@@ -5,11 +5,12 @@ local ActionState = import "Client/Systems/ActionState"
 local ActionQueue = import "Client/Systems/ActionQueue"
 local ActionPhases = import "Data/ActionPhases"
 
-
 local Animations = import "Client/Systems/Animations"
 local AnimationNames = import "Data/AnimationNames"
 
 local GetLocalCharacter = import "Utils/GetLocalCharacter"
+
+local Drop = import "Shared/Actions/Drop"
 
 -- determine which attach we should be doing, delegate that action
 
@@ -33,6 +34,10 @@ function Falldown.validate()
 end
 
 function Falldown.init(initialState)
+	if ActionState.hasAction(ActionIds.CARRY) then
+		Drop.init()
+	end
+
 	local character = GetLocalCharacter()
 	local humanoid = character:FindFirstChild("Humanoid")
 	local rootPart = character:FindFirstChild("HumanoidRootPart")

@@ -6,6 +6,7 @@ local StateRemove = import "./StateRemove"
 local HealthRegen = import "./HealthRegen"
 local KnockOut = import "./KnockOut"
 local ReconcileCarry = import "./ReconcileCarry"
+local ReconcileOwnership = import "./ReconcileOwnership"
 
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 
@@ -16,6 +17,7 @@ function PlayerStateStep.start()
 		local playerStates = PlayerStateManager.getPlayerStates()
 
 		ReconcileCarry.step(playerStates)
+		ReconcileOwnership.step(playerStates)
 		StateRemove.step(playerStates)
 		KnockOut.step(playerStates)
 		HealthRegen.step(playerStates)

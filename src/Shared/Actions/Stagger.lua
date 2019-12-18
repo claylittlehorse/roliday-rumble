@@ -7,6 +7,8 @@ local ActionPhases = import "Data/ActionPhases"
 local Animations = import "Client/Systems/Animations"
 local AnimationNames = import "Data/AnimationNames"
 
+local Drop = import "Shared/Actions/Drop"
+
 -- determine which attach we should be doing, delegate that action
 
 local Stagger = {}
@@ -28,6 +30,10 @@ function Stagger.validate()
 end
 
 function Stagger.init(initialState)
+	-- if ActionState.hasAction(ActionIds.CARRY) then
+	-- 	Drop.init()
+	-- end
+
 	ActionState.setActionState(Stagger.actionId, {
 		startTime = tick(),
 		currentPhase = ActionPhases.WINDUP,

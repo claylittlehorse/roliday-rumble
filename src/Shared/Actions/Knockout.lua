@@ -7,6 +7,8 @@ local ActionState = import "Client/Systems/ActionState"
 -- local AnimationNames = import "Data/AnimationNames"
 local GetLocalCharacter = import "Utils/GetLocalCharacter"
 
+local Drop = import "Shared/Actions/Drop"
+
 -- determine which attach we should be doing, delegate that action
 
 local Knockout = {}
@@ -19,6 +21,10 @@ function Knockout.validate()
 end
 
 function Knockout.init(initialState)
+	if ActionState.hasAction(ActionIds.CARRY) then
+		Drop.init()
+	end
+
 	local character = GetLocalCharacter()
 	local humanoid = character:FindFirstChild("Humanoid")
 	local rootPart = character:FindFirstChild("HumanoidRootPart")

@@ -2,6 +2,9 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 
 local Workspace = game:GetService("Workspace")
 
+local Animations = import "Client/Systems/Animations"
+local AnimationNames = import "Data/AnimationNames"
+
 local ActionIds = import "Data/ActionIds"
 local ActionState = import "Client/Systems/ActionState"
 
@@ -14,6 +17,19 @@ function Carry.validate()
 end
 
 function Carry.init(initialState)
+	Animations.playAnimation(AnimationNames.CARRYING, function(anim)
+		if not anim.isPlaying then
+			return true
+		end
+
+		if not ActionState.hasAction(Carry.actionId) then
+			anim:Stop()
+			return true
+		end
+
+		return false
+	end)
+
 	ActionState.setActionState(Carry.actionId, {
 		weldConstraint = initialState.weld
 	})
