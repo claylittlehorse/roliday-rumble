@@ -3,6 +3,8 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 local Workspace = game:GetService("Workspace")
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 
+local RecoverConstants = import "Data/RecoverConstants"
+
 local ReconcileCarry = {}
 
 local function cleanupWeld(carrying)
@@ -44,11 +46,12 @@ function ReconcileCarry.step(playerStates)
 
 		if isBeingCarried then
 			playerState.carrying.lastCarriedTime = tick()
+
+			local isFullyRecovered = playerState.health.currentHealth >= RecoverConstants.FULL_RECOVER_THRESHOLD
+
 			local carryingWeld = playerState.carrying.carryingWeld
 			local carrierInvalid, carrierState = isInvalid(playerState.carrying.playerCarryingMe, playerStates)
-
-			if not carryingWeld or not carryingWeld:IsDescendantOf(Workspace) or carrierInvalid then
-				print("invalid carrier")
+			if not carryingWeld or not carryingWeld:IsDescendantOf(Workspace) or carrierInvalid or isFullyRecovered then
 				clearCarriedState(playerState)
 				clearCarrierState(carrierState)
 			end
@@ -57,7 +60,6 @@ function ReconcileCarry.step(playerStates)
 			local carriedInvalid, carriedState = isInvalid(playerState.carrying.playerImCarrying, playerStates)
 
 			if not carryingWeld or not carryingWeld:IsDescendantOf(Workspace) or carriedInvalid then
-				print("invalid carrying")
 				clearCarriedState(playerState)
 				clearCarrierState(carriedState)
 			end

@@ -66,19 +66,19 @@ function ActionQueue.start()
 		-- 	})
 		-- end
 
-		local carryUpdated, carryInputState = Input.readBoundAction("Carry")
-		if carryInputState == Enum.UserInputState.Begin and carryUpdated then
-			for _, player in pairs(Players:GetPlayers()) do
-				if player ~= Players.LocalPlayer then
-					local char = player.Character
-					local humanoid = char:FindFirstChild("Humanoid")
-					local dist = (Players.LocalPlayer.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).magnitude
-					if humanoid and dist < 8 then
-						Network.fireServer(CombatEvents.REQUEST_CARRY, player)
-					end
-				end
-			end
-		end
+		-- local carryUpdated, carryInputState = Input.readBoundAction("Carry")
+		-- if carryInputState == Enum.UserInputState.Begin and carryUpdated then
+		-- 	for _, player in pairs(Players:GetPlayers()) do
+		-- 		if player ~= Players.LocalPlayer then
+		-- 			local char = player.Character
+		-- 			local humanoid = char:FindFirstChild("Humanoid")
+		-- 			local dist = (Players.LocalPlayer.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).magnitude
+		-- 			if humanoid and dist < 8 then
+		-- 				Network.fireServer(CombatEvents.REQUEST_CARRY, player)
+		-- 			end
+		-- 		end
+		-- 	end
+		-- end
 	end)
 end
 

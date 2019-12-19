@@ -12,6 +12,8 @@ local Carry = {}
 Carry.movementPriority = 0
 Carry.actionId = ActionIds.CARRY
 
+local Drop =
+
 function Carry.validate()
 	return true
 end
@@ -37,6 +39,12 @@ end
 
 function Carry.step(state)
 	local weldConstraint = state.weldConstraint
+
+	local isKnockedDown = ActionState.hasAction(ActionIds.FALLDOWN) or ActionState.hasAction(ActionIds.KNOCKOUT)
+
+	if isKnockedDown then
+		Drop.init()
+	end
 
 	if not weldConstraint:IsDescendantOf(Workspace) then
 		ActionState.setActionState(Carry.actionId, false)

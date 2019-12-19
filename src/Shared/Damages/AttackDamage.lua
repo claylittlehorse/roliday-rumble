@@ -12,7 +12,7 @@ AttackDamage.__index = AttackDamage
 function AttackDamage.new(actionId, shouldKnockdown)
     local self = {
 		actionId = actionId,
-		damageAmount = 20,
+		damageAmount = 50,--7.5,
 		isActive = true,
 		damagedThings = {},
 		shouldKnockdown = shouldKnockdown

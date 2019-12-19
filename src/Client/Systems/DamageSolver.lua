@@ -75,17 +75,21 @@ function DamageSolver.start()
 				elseif canDamageThing(damage, victimPlayer, victimCollider) then
 					local rootPart = character:FindFirstChild("HumanoidRootPart")
 
-					local knockbackModel = KnockbackModel.new({
-						direction = rootPart.CFrame.LookVector,
-						speed = KNOCKBACK_SPEED,
-						duration = KNOCKBACK_DURATION,
-						shouldKnockdown = damage.shouldKnockdown
-					})
 
-					Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, {
-						damage = damage.damageAmount,
-						knockback = knockbackModel
-					})
+					if damage.damageAmount then
+						local knockbackModel = KnockbackModel.new({
+							direction = rootPart.CFrame.LookVector,
+							speed = KNOCKBACK_SPEED,
+							duration = KNOCKBACK_DURATION,
+							shouldKnockdown = damage.shouldKnockdown
+						})
+
+						Network.fireServer(CombatEvents.REPLICATE_DAMAGE, victimPlayer, {
+							damage = damage.damageAmount,
+							knockback = knockbackModel
+						})
+					end
+
 					damage:onThingDamaged(victimPlayer)
 				end
 			end

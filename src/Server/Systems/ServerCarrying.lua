@@ -8,6 +8,9 @@ local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local SetCharacterOwnership = import "GameUtils/SetCharacterOwnership"
 
+local KNOCKED_OUT_DB = 1
+local DROPPED_DB = 1.5
+
 local Carrying = {}
 
 local function isCarrierValid(carrierState)
@@ -23,12 +26,12 @@ end
 local function isCarriedValid(carriedState)
 	local isKnockedOut =  carriedState.ko.isKnockedOut
 	local isntBeingCarried = carriedState.carrying.playerCarryingMe == nil
+	local wasntJustKnockedOut = tick() - carriedState.ko.knockedOutTime >= KNOCKED_OUT_DB
+	local wasntJustDropped = tick() - carriedState.carrying.lastCarriedTime >= DROPPED_DB
 
-	local isValid = isntBeingCarried and isKnockedOut
+	local isValid = isntBeingCarried and isKnockedOut and wasntJustDropped and wasntJustKnockedOut
 	return isValid
 end
-
-
 
 local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, carriedState)
 	carriedState.carrying.playerCarryingMe = carrierPlayer
