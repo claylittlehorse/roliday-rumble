@@ -10,16 +10,20 @@ local Camera = import "Client/Systems/Camera"
 local Sound = import "Shared/Systems/Sound"
 local CombatState = import "Client/Systems/CombatState"
 
+local Hitstop = import "GameUtils/Hitstop"
+local EnemyShake = import "Client/Systems/EnemyShake"
+
 local AttackDamage = {}
 AttackDamage.__index = AttackDamage
 
-function AttackDamage.new(actionId, shouldKnockdown)
+function AttackDamage.new(actionId, shouldKnockdown, stopLength)
     local self = {
 		actionId = actionId,
 		damageAmount = 10,
 		isActive = true,
 		damagedThings = {},
-		shouldKnockdown = shouldKnockdown
+		shouldKnockdown = shouldKnockdown,
+		stopLength = stopLength or 0.1
 	}
     return setmetatable(self, AttackDamage)
 end
@@ -35,7 +39,7 @@ function AttackDamage:setActive(active)
 end
 
 function AttackDamage:shouldCleanup()
-	if not ActionState.isActive(self.actionId) then
+	if not ActionState.isActive(self.actionId, Hitstop.tick()) then
 		return true
 	end
 
@@ -49,6 +53,14 @@ function AttackDamage:onThingDamaged(thing)
 
 		Camera.dealDamageSpring:Accelerate(10)
 		Sound.playAtCharacter("Hit"..CombatState.comboCount)
+
+		local myChar = GetLocalCharacter()
+		local theirChar = thing.Character
+		if myChar then
+			local myVector = myChar.HumanoidRootPart.CFrame.lookVector
+			EnemyShake.shakeCharacter(theirChar, myVector, self.stopLength)
+		end
+		Hitstop.stop(self.stopLength)
 	end
 end
 

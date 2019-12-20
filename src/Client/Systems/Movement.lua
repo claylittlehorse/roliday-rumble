@@ -9,6 +9,8 @@ local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local ActionState = import "Client/Systems/ActionState"
 local Knockback = import "Client/Systems/Knockback"
 
+local Hitstop = import "GameUtils/Hitstop"
+
 local Movement = {}
 local _setupCharacter = nil
 local _bodyVel = nil
@@ -78,7 +80,10 @@ local function doMovement()
 	local moveDirection = humanoid.MoveDirection
 
 	local moveVel = getVelocity()
-	if moveVel.magnitude > 0.5 then
+	if Hitstop.isStopped() then
+		_bodyVel.MaxForce = Vector3.new(400000, 400000, 400000)
+		_bodyVel.Velocity = Vector3.new(0, 0, 0)
+	elseif moveVel.magnitude > 0.5 then
 		_bodyVel.MaxForce = Vector3.new(400000, 0, 400000)
 		_bodyVel.Velocity = moveVel + (moveDirection * speed)
 		return

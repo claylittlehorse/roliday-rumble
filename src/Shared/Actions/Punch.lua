@@ -8,6 +8,8 @@ local AttackDamage = import "Shared/Damages/AttackDamage"
 local DamageSolver = import "Client/Systems/DamageSolver"
 local Sound = import "Shared/Systems/Sound"
 
+local Hitstop = import "GameUtils/Hitstop"
+
 local PlayPunchAnim = import "GameUtils/PlayPunchAnim"
 
 local Punch = {}
@@ -35,7 +37,7 @@ end
 
 function Punch.init(initialState)
 	ActionState.setActionState(Punch.actionId, {
-		startTime = tick(),
+		startTime = Hitstop.tick(),
 		currentPhase = ActionPhases.WINDUP
 	})
 
@@ -44,17 +46,18 @@ function Punch.init(initialState)
 end
 
 function Punch.step(state)
-	local newPhase = ActionState.getActionPhase(Punch.actionId)
+	local newPhase = ActionState.getActionPhase(Punch.actionId, Hitstop.tick())
 	local phaseChanged = state.currentPhase ~= newPhase
 	state.currentPhase = newPhase
 
-	if phaseChanged and ActionState.isActive(Punch.actionId) then
+	if phaseChanged and ActionState.isActive(Punch.actionId, Hitstop.tick()) then
 		Sound.playAtCharacter("Swing")
+		print("new damage")
 		local damage = AttackDamage.new(Punch.actionId)
 		DamageSolver.addDamage(damage)
 	end
 
-	if ActionState.isComplete(Punch.actionId) then
+	if ActionState.isComplete(Punch.actionId, Hitstop.tick()) then
 		ActionState.setActionState(Punch.actionId, nil)
 	end
 end
@@ -70,10 +73,10 @@ function Punch.changeSpeed(baseSpeed)
 end
 
 function Punch.addVelocity()
-	-- if ActionState.isActive(Punch.actionId) then
-	-- 	local alpha = 1 - ActionState.getPhaseAlpha(Punch.actionId)
-	-- 	return Vector3.new(0, 0, alpha * -20)
-	-- end
+	if ActionState.isActive(Punch.actionId) then
+		local alpha = 1 - ActionState.getPhaseAlpha(Punch.actionId, Hitstop.tick())
+		return Vector3.new(0, 0, alpha * -10)
+	end
 
 	return Vector3.new(0, 0, 0)
 end

@@ -28,7 +28,6 @@ function Attack.validate()
 	end
 
 	if ATTACK_DB >= tick() - CombatState.lastAttackTime then
-		print("too soon")
 		return false
 	end
 
@@ -47,7 +46,6 @@ function Attack.validate()
 end
 
 function Attack.init(initialState)
-	print('init')
 	local elapsedTime = tick() - CombatState.lastAttackTime
 	CombatState.lastAttackTime = tick()
 

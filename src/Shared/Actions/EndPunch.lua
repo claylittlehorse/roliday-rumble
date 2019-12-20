@@ -8,6 +8,8 @@ local AttackDamage = import "Shared/Damages/AttackDamage"
 local DamageSolver = import "Client/Systems/DamageSolver"
 local Sound = import "Shared/Systems/Sound"
 
+local Hitstop = import "GameUtils/Hitstop"
+
 local PlayPunchAnim = import "GameUtils/PlayPunchAnim"
 -- determine which attach we should be doing, delegate that action
 
@@ -36,7 +38,7 @@ end
 
 function EndPunch.init(initialState)
 	ActionState.setActionState(EndPunch.actionId, {
-		startTime = tick(),
+		startTime = Hitstop.tick(),
 		currentPhase = ActionPhases.WINDUP
 	})
 
@@ -44,19 +46,19 @@ function EndPunch.init(initialState)
 end
 
 function EndPunch.step(state)
-	local newPhase = ActionState.getActionPhase(EndPunch.actionId)
+	local newPhase = ActionState.getActionPhase(EndPunch.actionId, Hitstop.tick())
 	local phaseChanged = state.currentPhase ~= newPhase
 	state.currentPhase = newPhase
 
-	if phaseChanged and ActionState.isActive(EndPunch.actionId) then
+	if phaseChanged and ActionState.isActive(EndPunch.actionId, Hitstop.tick()) then
+		print("neu damage")
 		Sound.playAtCharacter("LoudSwing")
-
 		PlayPunchAnim.light(EndPunch.actionId)
-		local damage = AttackDamage.new(EndPunch.actionId, true)
+		local damage = AttackDamage.new(EndPunch.actionId, true, 0.2)
 		DamageSolver.addDamage(damage)
 	end
 
-	if ActionState.isComplete(EndPunch.actionId) then
+	if ActionState.isComplete(EndPunch.actionId, Hitstop.tick()) then
 		ActionState.setActionState(EndPunch.actionId, nil)
 	end
 end
@@ -66,8 +68,8 @@ function EndPunch.changeSpeed(baseSpeed)
 end
 
 function EndPunch.addVelocity()
-	if ActionState.isActive(EndPunch.actionId) then
-		local alpha = 1 - ActionState.getPhaseAlpha(EndPunch.actionId)
+	if ActionState.isActive(EndPunch.actionId, Hitstop.tick()) then
+		local alpha = 1 - ActionState.getPhaseAlpha(EndPunch.actionId, Hitstop.tick())
 		return Vector3.new(0, 0, alpha * -40)
 	end
 

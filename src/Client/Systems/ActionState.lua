@@ -12,8 +12,9 @@ local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local ActionState = {}
 local _actionStates = {}
 
-local function getTimedPhase(phaseTimings, startTime)
-	local elapsedTime = tick() - startTime
+local function getTimedPhase(phaseTimings, startTime, currentTime)
+	currentTime = currentTime or tick()
+	local elapsedTime = currentTime - startTime
 
 	local windup = phaseTimings[ActionPhases.WINDUP]
 	local active = phaseTimings[ActionPhases.ACTIVE] + windup
@@ -45,7 +46,7 @@ function ActionState.getActionState(actionId, state)
 	return _actionStates[actionId]
 end
 
-function ActionState.getActionPhase(actionId)
+function ActionState.getActionPhase(actionId, currentTime)
 	local actionState = ActionState.getActionState(actionId)
 	if not actionState then
 		return nil, nil
@@ -55,14 +56,14 @@ function ActionState.getActionPhase(actionId)
 	local getPhaseFunc = action.getPhase
 
 	if getPhaseFunc then
-		return getPhaseFunc(actionState)
+		return getPhaseFunc(actionState, currentTime)
 	end
 
 	local phaseTimings = action.phaseTimings
 
 	assert(phaseTimings, ("Action %s does not have phase timings"):format(actionId))
 	local startTime = actionState.startTime
-	return getTimedPhase(phaseTimings, startTime)
+	return getTimedPhase(phaseTimings, startTime, currentTime)
 end
 
 function ActionState.hasAction(actionId)
@@ -88,28 +89,28 @@ function ActionState.stopActionsInMap(idToTypeMap)
 	end
 end
 
-function ActionState.isWindup(actionId)
-	local phase = ActionState.getActionPhase(actionId)
+function ActionState.isWindup(actionId, currentTime)
+	local phase = ActionState.getActionPhase(actionId, currentTime)
 	return phase == ActionPhases.WINDUP
 end
 
-function ActionState.isActive(actionId)
-	local phase = ActionState.getActionPhase(actionId)
+function ActionState.isActive(actionId, currentTime)
+	local phase = ActionState.getActionPhase(actionId, currentTime)
 	return phase == ActionPhases.ACTIVE
 end
 
-function ActionState.isCooldown(actionId)
-	local phase = ActionState.getActionPhase(actionId)
+function ActionState.isCooldown(actionId, currentTime)
+	local phase = ActionState.getActionPhase(actionId, currentTime)
 	return phase == ActionPhases.COOLDOWN
 end
 
-function ActionState.isComplete(actionId)
-	local phase = ActionState.getActionPhase(actionId)
+function ActionState.isComplete(actionId, currentTime)
+	local phase = ActionState.getActionPhase(actionId, currentTime)
 	return phase == ActionPhases.COMPLETE
 end
 
-function ActionState.getPhaseAlpha(actionId)
-	local _, alpha = ActionState.getActionPhase(actionId)
+function ActionState.getPhaseAlpha(actionId, currentTime)
+	local _, alpha = ActionState.getActionPhase(actionId, currentTime)
 	return alpha or 0
 end
 
