@@ -5,35 +5,8 @@ local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
 local StepOrder = import "Data/StepOrder"
-
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
-
-local AnimationNames = import "Data/AnimationNames"
-local AttackAnim = import "Assets/Animations/AttackAnim"
-local CarryingAnim = import "Assets/Animations/CarryingAnim"
-local FlailAnim = import "Assets/Animations/FlailAnim"
-
-local animationsToLoad = {
-	[AnimationNames.ATTACK] = {
-		anim = AttackAnim,
-		weight = 500,
-		priority = Enum.AnimationPriority.Action,
-		looped = false,
-	},
-	[AnimationNames.CARRYING] = {
-		anim = CarryingAnim,
-		weight = 10,
-		priority = Enum.AnimationPriority.Action,
-		looped = true,
-	},
-	[AnimationNames.FLAIL] = {
-		anim = FlailAnim,
-		weight = 10,
-		priority = Enum.AnimationPriority.Action,
-		looped = true,
-		speed = 2,
-	}
-}
+local AnimationData = import "Data/AnimationData"
 
 local Animations = {}
 local _loadedCharacter = nil
@@ -43,7 +16,7 @@ local _animCallbacks = {}
 local function loadAnimations(character)
 	local humanoid = character:FindFirstChild("Humanoid")
 	_loadedAnims = {}
-	for animName, animInfo in pairs(animationsToLoad) do
+	for animName, animInfo in pairs(AnimationData) do
 		local loadAnim = humanoid:LoadAnimation(animInfo.anim)
 		loadAnim:AdjustWeight(animInfo.weight)
 		loadAnim:AdjustSpeed(animInfo.speed or 1)

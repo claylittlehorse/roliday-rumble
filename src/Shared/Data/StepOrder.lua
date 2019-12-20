@@ -6,4 +6,5 @@ return {
 	ACTION_STATE = Camera - 3,
 	MOVEMENT = Camera - 4,
 	DAMAGE = Camera - 1,
+	CAMERA = Camera + 1,
 }

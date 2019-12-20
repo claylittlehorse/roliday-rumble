@@ -7,6 +7,8 @@ local Input = import "Client/Systems/Input"
 local StepOrder = import "Data/StepOrder"
 local Actions = import "Shared/Actions"
 local ActionIds = import "Data/ActionIds"
+
+local Camera = import "Client/Systems/Camera"
 local ActionQueue =  {}
 
 local Network = import "Network"
@@ -61,9 +63,9 @@ function ActionQueue.start()
 
 		-- local _, falldownInputState = Input.readBoundAction("FallDown")
 		-- if falldownInputState == Enum.UserInputState.Begin then
-		-- 	ActionQueue.queueAction(ActionIds.KNOCKOUT, {
-		-- 		velocity = (workspace.CurrentCamera.CFrame.LookVector * Vector3.new(1, 0, 1)) * 30
-		-- 	})
+		-- 	Camera.dealDamageSpring:SetDamping(workspace.Damp.Value)
+		-- 	Camera.dealDamageSpring:SetSpeed(workspace.Speed.Value)
+		-- 	Camera.dealDamageSpring:Accelerate(workspace.Velocity.Value)
 		-- end
 
 		-- local carryUpdated, carryInputState = Input.readBoundAction("Carry")

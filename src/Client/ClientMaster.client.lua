@@ -29,7 +29,8 @@ local loadOrder = {
 	"Client/Systems/Knockback",
 	"Client/Systems/Movement",
 	"Client/Systems/Health",
-	"Client/Systems/ClientCarrying"
+	"Client/Systems/ClientCarrying",
+	"Client/Systems/Camera"
 }
 
 for _, path in ipairs(loadOrder) do

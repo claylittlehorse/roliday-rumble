@@ -13,6 +13,8 @@ local Health = import "Client/Systems/Health"
 
 -- determine which attach we should be doing, delegate that action
 
+local ATTACK_DB = 0.4
+
 local Attack = {}
 Attack.movementPriority = 0
 Attack.actionId = ActionIds.ATTACK
@@ -22,6 +24,11 @@ local COMBO_TIMEOUT = 3
 
 function Attack.validate()
 	if not Health.isActive() then
+		return false
+	end
+
+	if ATTACK_DB >= tick() - CombatState.lastAttackTime then
+		print("too soon")
 		return false
 	end
 
@@ -40,6 +47,9 @@ function Attack.validate()
 end
 
 function Attack.init(initialState)
+	local elapsedTime = tick() - CombatState.lastAttackTime
+	CombatState.lastAttackTime = tick()
+
 	local isCarrying = ActionState.hasAction(ActionIds.CARRY)
 	if isCarrying then
 		Drop.init({
@@ -47,16 +57,13 @@ function Attack.init(initialState)
 		})
 	end
 
-	local elapsedTime = tick() - CombatState.lastAttackTime
-	CombatState.lastAttackTime = tick()
-	if elapsedTime > COMBO_TIMEOUT then
+	if elapsedTime > COMBO_TIMEOUT or CombatState.comboCount == COMBO_LENGTH then
 		CombatState.comboCount = 1
 	else
 		CombatState.comboCount = CombatState.comboCount + 1
 	end
 
 	if CombatState.comboCount >= COMBO_LENGTH then
-		CombatState.comboCount = 0
 		EndPunch.init()
 	else
 		Punch.init()

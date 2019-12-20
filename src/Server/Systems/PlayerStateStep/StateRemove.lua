@@ -15,6 +15,10 @@ function StateRemove.step(playerStates)
 		local player = Players:GetPlayerByUserId(userId)
 		if not IsValidCharacter(character) then
 			playerStates[userId] = nil
+			local health = character:FindFirstChild("HealthVal")
+			if health then
+				health:Destroy()
+			end
 			Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, false)
 			Network.fireClient(CombatEvents.REPLICATE_HEALTH, player, 0)
 		end

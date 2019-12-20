@@ -8,9 +8,7 @@ local AttackDamage = import "Shared/Damages/AttackDamage"
 local DamageSolver = import "Client/Systems/DamageSolver"
 local Sound = import "Shared/Systems/Sound"
 
-local Animations = import "Client/Systems/Animations"
-local AnimationNames = import "Data/AnimationNames"
-
+local PlayPunchAnim = import "GameUtils/PlayPunchAnim"
 -- determine which attach we should be doing, delegate that action
 
 local EndPunch = {}
@@ -52,18 +50,8 @@ function EndPunch.step(state)
 
 	if phaseChanged and ActionState.isActive(EndPunch.actionId) then
 		Sound.playAtCharacter("LoudSwing")
-		Animations.playAnimation(AnimationNames.ATTACK, function(anim)
-			if not anim.isPlaying then
-				return true
-			end
 
-			if not ActionState.hasAction(EndPunch.actionId) or ActionState.hasAction(ActionIds.STAGGER) then
-				anim:Stop()
-				return true
-			end
-
-			return false
-		end)
+		PlayPunchAnim.light(EndPunch.actionId)
 		local damage = AttackDamage.new(EndPunch.actionId, true)
 		DamageSolver.addDamage(damage)
 	end
@@ -74,7 +62,7 @@ function EndPunch.step(state)
 end
 
 function EndPunch.changeSpeed(baseSpeed)
-	return baseSpeed / 5
+	return baseSpeed * 1.2
 end
 
 function EndPunch.addVelocity()

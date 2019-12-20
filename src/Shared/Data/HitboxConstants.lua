@@ -4,5 +4,5 @@ return {
 
 	-- Attack hitbox is sphere offset from ground contact pos
 	ATTACK_OFFSET = CFrame.new(0, 3.5, -2),
-	ATTACK_RADIUS = 2.3,
+	ATTACK_RADIUS = 3,
 }

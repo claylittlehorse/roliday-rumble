@@ -6,13 +6,17 @@ local ColliderFromCharacter = import "GameUtils/ColliderFromCharacter"
 local GetLocalCharacter = import "Utils/GetLocalCharacter"
 local ActionState = import "Client/Systems/ActionState"
 
+local Camera = import "Client/Systems/Camera"
+local Sound = import "Shared/Systems/Sound"
+local CombatState = import "Client/Systems/CombatState"
+
 local AttackDamage = {}
 AttackDamage.__index = AttackDamage
 
 function AttackDamage.new(actionId, shouldKnockdown)
     local self = {
 		actionId = actionId,
-		damageAmount = 50,--7.5,
+		damageAmount = 10,
 		isActive = true,
 		damagedThings = {},
 		shouldKnockdown = shouldKnockdown
@@ -42,6 +46,9 @@ function AttackDamage:onThingDamaged(thing)
 	if typeof(thing) == "Instance" and thing:IsA("Player") then
 		local userId = tostring(thing.userId)
 		self.damagedThings[userId] = true
+
+		Camera.dealDamageSpring:Accelerate(10)
+		Sound.playAtCharacter("Hit"..CombatState.comboCount)
 	end
 end
 
@@ -51,6 +58,13 @@ function AttackDamage:canDamageThing(thing)
 	end
 
 	if typeof(thing) == "Instance" and thing:IsA("Player") then
+		local character = thing.Character
+		local health = character and character:FindFirstChild("HealthVal")
+		local humanoid = character and character:FindFirstChild("Humanoid")
+		if not health or health.Value == 0 or not humanoid or humanoid.PlatformStand then
+			return false
+		end
+
 		local userId = tostring(thing.userId)
 		if not self.damagedThings[userId] then
 			return true

@@ -48,12 +48,19 @@ function DamageReplication.start()
 		local victimState = playerStates[victimUserId]
 
 		if attackerState and victimState and isValidAttacker(attackerState) and isValidVictim(victimState) then
-			Sound.playSound("Hurt", victimState.characterModel.HumanoidRootPart.Position)
+			local victimChar = victimState.characterModel
 			victimState.health.currentHealth = math.max(victimState.health.currentHealth - damage, 0)
 			if victimState.health.currentHealth <= 0 then
 				knockback.shouldKnockOut = true
+				Sound.playSound("Knockout", victimChar.HumanoidRootPart.Position)
 			elseif not knockback.shouldKnockdown then
+				Sound.playSound("Hurt", victimState.characterModel.HumanoidRootPart.Position)
 				Network.fireClient(CombatEvents.REPLICATE_ACTION, victimPlayer, ActionIds.STAGGER)
+			end
+
+			local victimHealth = victimChar and victimChar:FindFirstChild("HealthVal")
+			if victimHealth then
+				victimHealth.Value = victimState.health.currentHealth
 			end
 
 			victimState.health.lastDamagedTime = tick()

@@ -8,18 +8,15 @@ local AttackDamage = import "Shared/Damages/AttackDamage"
 local DamageSolver = import "Client/Systems/DamageSolver"
 local Sound = import "Shared/Systems/Sound"
 
-local Animations = import "Client/Systems/Animations"
-local AnimationNames = import "Data/AnimationNames"
-
--- determine which attach we should be doing, delegate that action
+local PlayPunchAnim = import "GameUtils/PlayPunchAnim"
 
 local Punch = {}
 Punch.movementPriority = 1
 Punch.actionId = ActionIds.PUNCH
 Punch.phaseTimings = {
 	[ActionPhases.WINDUP] = 0.1,
-	[ActionPhases.ACTIVE] = 0.3,
-	[ActionPhases.COOLDOWN] = 0.2,
+	[ActionPhases.ACTIVE] = 0.2,
+	[ActionPhases.COOLDOWN] = 0.1,
 }
 
 function Punch.validate()
@@ -43,18 +40,7 @@ function Punch.init(initialState)
 	})
 
 	Sound.playAtCharacter("Windup")
-	Animations.playAnimation(AnimationNames.ATTACK, function(anim)
-		if not anim.isPlaying then
-			return true
-		end
-
-		if not ActionState.hasAction(Punch.actionId) then
-			anim:Stop()
-			return true
-		end
-
-		return false
-	end)
+	PlayPunchAnim.light(Punch.actionId)
 end
 
 function Punch.step(state)
