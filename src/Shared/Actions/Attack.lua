@@ -13,7 +13,7 @@ local Health = import "Client/Systems/Health"
 
 -- determine which attach we should be doing, delegate that action
 
-local ATTACK_DB = 0.4
+local ATTACK_DB = 0.5
 
 local Attack = {}
 Attack.movementPriority = 0
@@ -47,6 +47,7 @@ function Attack.validate()
 end
 
 function Attack.init(initialState)
+	print('init')
 	local elapsedTime = tick() - CombatState.lastAttackTime
 	CombatState.lastAttackTime = tick()
 
@@ -55,6 +56,7 @@ function Attack.init(initialState)
 		Drop.init({
 			throw = true
 		})
+		return
 	end
 
 	if elapsedTime > COMBO_TIMEOUT or CombatState.comboCount == COMBO_LENGTH then

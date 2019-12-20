@@ -21,7 +21,13 @@ function HealthRegen.step(playerStates)
 		if wasntDamagedRecently and hasntRegenedRecently and isLessThanMaxHealth then
 			playerState.health.lastRegenedTime = tick()
 			playerState.health.currentHealth = math.min(playerState.health.currentHealth+regenAmount, 100)
-			Network.fireClient(CombatEvents.REPLICATE_HEALTH, Players:GetPlayerByUserId(userId), playerState.health.currentHealth)
+			local player =  Players:GetPlayerByUserId(userId)
+			local char = player.Character
+			local health = char and char:FindFirstChild("HealthVal")
+			if health then
+				health.Value = playerState.health.currentHealth
+			end
+			Network.fireClient(CombatEvents.REPLICATE_HEALTH, player, playerState.health.currentHealth)
 		end
 	end
 end

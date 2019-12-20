@@ -15,7 +15,7 @@ GetUp.movementPriority = 1
 GetUp.actionId = ActionIds.GET_UP
 GetUp.phaseTimings = {
 	[ActionPhases.WINDUP] = 0,
-	[ActionPhases.ACTIVE] = 0.15,
+	[ActionPhases.ACTIVE] = 0.2,
 	[ActionPhases.COOLDOWN] = 0,
 }
 

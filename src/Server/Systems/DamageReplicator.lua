@@ -52,6 +52,7 @@ function DamageReplication.start()
 			victimState.health.currentHealth = math.max(victimState.health.currentHealth - damage, 0)
 			if victimState.health.currentHealth <= 0 then
 				knockback.shouldKnockOut = true
+				Sound.playSound("Died", victimChar.HumanoidRootPart.Position)
 				Sound.playSound("Knockout", victimChar.HumanoidRootPart.Position)
 			elseif not knockback.shouldKnockdown then
 				Sound.playSound("Hurt", victimState.characterModel.HumanoidRootPart.Position)

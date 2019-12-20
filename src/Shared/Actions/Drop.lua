@@ -25,7 +25,7 @@ function Drop.init(initialState)
 	end
 
 	if carryingPart and initialState.throw then
-		carryingPart.Velocity = Vector3.new(0, 30, 0) + rootPart.CFrame.lookVector * 40
+		carryingPart.Velocity = Vector3.new(0, 15, 0) + rootPart.CFrame.lookVector * 60
 		carryingPart.RotVelocity = -rootPart.CFrame.RightVector * 15 + Vector3.new(0, 3, 0)
 		local damage = ThrownPlayerDamage.new(carryingPart.Parent)
 		DamageSolver.addDamage(damage)

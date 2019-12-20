@@ -61,7 +61,7 @@ function AttackDamage:canDamageThing(thing)
 		local character = thing.Character
 		local health = character and character:FindFirstChild("HealthVal")
 		local humanoid = character and character:FindFirstChild("Humanoid")
-		if not health or health.Value == 0 or not humanoid or humanoid.PlatformStand then
+		if (not health) or (health.Value == 0) or (not humanoid) or (humanoid.PlatformStand) then
 			return false
 		end
 

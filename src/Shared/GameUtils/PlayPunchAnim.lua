@@ -2,7 +2,7 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 
 local Animations = import "Client/Systems/Animations"
 local AnimationNames = import "Data/AnimationNames"
-
+local ActionIds = import "Data/ActionIds"
 local ActionState = import "Client/Systems/ActionState"
 
 local PlayPunchAnim = {}
@@ -17,7 +17,7 @@ function PlayPunchAnim.heavy(actionId)
 			return true
 		end
 
-		if not ActionState.hasAction(actionId) then
+		if not ActionState.hasAction(actionId) or ActionState.hasAction(ActionIds.STAGGER) then
 			anim:Stop()
 			return true
 		end
@@ -35,7 +35,7 @@ function PlayPunchAnim.light(actionId)
 			return true
 		end
 
-		if not ActionState.hasAction(actionId) then
+		if not ActionState.hasAction(actionId) or ActionState.hasAction(ActionIds.STAGGER) then
 			anim:Stop()
 			return true
 		end

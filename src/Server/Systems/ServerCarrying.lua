@@ -8,6 +8,8 @@ local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local SetCharacterOwnership = import "GameUtils/SetCharacterOwnership"
 
+local Sound = import "Shared/Systems/Sound"
+
 local KNOCKED_OUT_DB = 1
 local DROPPED_DB = 1.5
 
@@ -37,14 +39,14 @@ local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, car
 	carriedState.carrying.playerCarryingMe = carrierPlayer
 	carrierState.carrying.playerImCarrying = carriedPlayer
 
-	SetCharacterOwnership(carriedState, carrierPlayer)
-
 	local carrierCharacter = carrierPlayer.Character
 	local carriedCharacter = carriedPlayer.Character
 
 	if not (IsValidCharacter(carrierCharacter) and IsValidCharacter(carriedCharacter)) then
 		return
 	end
+
+	SetCharacterOwnership(carriedState, carrierPlayer)
 
 	local carrierRoot = carrierCharacter:FindFirstChild("HumanoidRootPart")
 	local carriedRoot = carriedCharacter:FindFirstChild("HumanoidRootPart")
@@ -76,6 +78,8 @@ local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, car
 	Network.fireClient(CombatEvents.REPLICATE_ACTION, carrierPlayer, ActionIds.CARRY, {
 		weld = weldConstraint
 	})
+
+	Sound.playSound("Pickup", carrierRoot.Position)
 end
 
 function Carrying.start()
