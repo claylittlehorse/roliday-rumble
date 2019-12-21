@@ -32,6 +32,7 @@ local loadOrder = {
 	"Client/Systems/ClientCarrying",
 	"Client/Systems/Camera",
 	"Client/Systems/EnemyShake",
+	"Shared/Systems/CollisionGroups"
 }
 
 for _, path in ipairs(loadOrder) do

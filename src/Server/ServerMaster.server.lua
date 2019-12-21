@@ -11,7 +11,9 @@ local loadOrder = {
 	"Server/Systems/GameLoop",
 	"Server/Systems/DamageReplicator",
 	"Shared/Systems/Sound",
-	"Server/Systems/ServerCarrying"
+	"Server/Systems/ServerCarrying",
+	"Shared/Systems/CollisionGroups",
+	"Server/Systems/GetUpReplicator"
 }
 
 for _, path in ipairs(loadOrder) do
