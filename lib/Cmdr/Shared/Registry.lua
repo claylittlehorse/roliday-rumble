@@ -4,10 +4,11 @@ local Util = require(script.Parent.Util)
 
 --- The registry keeps track of all the commands and types that Cmdr knows about.
 local Registry = {
-	TypeMethods = Util.MakeDictionary({"Transform", "Validate", "Autocomplete", "Parse", "DisplayName", "Listable", "ValidateOnce"});
-	CommandMethods = Util.MakeDictionary({"Name", "Aliases", "AutoExec", "Description", "Args", "Run", "Data", "Group"});
+	TypeMethods = Util.MakeDictionary({"Transform", "Validate", "Autocomplete", "Parse", "DisplayName", "Listable", "ValidateOnce", "Prefixes"});
+	CommandMethods = Util.MakeDictionary({"Name", "Aliases", "AutoExec", "Description", "Args", "Run", "ClientRun", "Data", "Group"});
 	CommandArgProps = Util.MakeDictionary({"Name", "Type", "Description", "Optional", "Default"});
 	Types = {};
+	TypeAliases = {};
 	Commands = {};
 	CommandsArray = {};
 	Cmdr = nil;
@@ -49,6 +50,23 @@ function Registry:RegisterType (name, typeObject)
 	typeObject.DisplayName = typeObject.DisplayName or name
 
 	self.Types[name] = typeObject
+
+	if typeObject.Prefixes then
+		self:RegisterTypePrefix(name, typeObject.Prefixes)
+	end
+end
+
+function Registry:RegisterTypePrefix (name, union)
+	if not self.TypeAliases[name] then
+		self.TypeAliases[name] = name
+	end
+
+	self.TypeAliases[name] = ("%s %s"):format(self.TypeAliases[name], union)
+end
+
+function Registry:RegisterTypeAlias (name, alias)
+	assert(self.TypeAliases[name] == nil, ("Type alias %s already exists!"):format(alias))
+	self.TypeAliases[name] = alias
 end
 
 --- Helper method that registers types from all module scripts in a specific container.
@@ -69,7 +87,7 @@ Registry.RegisterHooksIn = Registry.RegisterTypesIn
 
 --- Registers a command based purely on its definition.
 -- Prefer using Registry:RegisterCommand for proper handling of server/client model.
-function Registry:RegisterCommandObject (commandObject)
+function Registry:RegisterCommandObject (commandObject, fromCmdr)
 	for key in pairs(commandObject) do
 		if self.CommandMethods[key] == nil then
 			error("Unknown key/method in command " .. (commandObject.Name or "unknown command") .. ": " .. key)
@@ -86,8 +104,8 @@ function Registry:RegisterCommandObject (commandObject)
 		end
 	end
 
-	if RunService:IsClient() and commandObject.Data and commandObject.Run then
-		error(('Invalid command implementation provided for "%s": "Data" and "Run" sections are mutually exclusive'):format(commandObject.Name or "unknown"))
+	if not fromCmdr and RunService:IsClient() and commandObject.Run then
+		warn(commandObject.Name, "command has `Run` in its command definition; prefer using `ClientRun` for new work.")
 	end
 
 	if commandObject.AutoExec and RunService:IsClient() then
@@ -200,6 +218,11 @@ end
 --- Gets a type definition by name.
 function Registry:GetType (name)
 	return self.Types[name]
+end
+
+--- Returns a type name, parsing aliases.
+function Registry:GetTypeName (name)
+	return self.TypeAliases[name] or name
 end
 
 --- Adds a hook to be called when any command is run
