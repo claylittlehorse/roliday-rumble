@@ -7,6 +7,8 @@ local Network = import "Network"
 local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 local CollisionGroups = import "Shared/Systems/CollisionGroups"
 
+local Sounds = import "Assets/Sounds"
+
 local PlayerStateManager = {}
 local playerStates = {}
 
@@ -41,6 +43,14 @@ local function setupCharacter(player)
 
 	for _, humanoidState in pairs(disabledStates) do
 		player.Character.Humanoid:SetStateEnabled(humanoidState, false)
+	end
+
+	if not player.Character.HumanoidRootPart:FindFirstChild("Sounds") then
+		local soundClone = Sounds:Clone()
+		soundClone.Parent = player.Character.HumanoidRootPart
+		for _, sound in pairs(soundClone:GetChildren()) do
+			sound.Parent = soundClone.Parent
+		end
 	end
 
 	CollisionGroups.setCharacterCollisionGroup(player.Character, CollisionGroups.groupIds.PLAYER_COLLIDE)

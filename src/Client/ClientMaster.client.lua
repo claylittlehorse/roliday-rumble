@@ -25,7 +25,6 @@ local loadOrder = {
 	"Client/Systems/ActionState",
 	"Client/Systems/DamageSolver",
 	"Client/Systems/Animations",
-	"Shared/Systems/Sound",
 	"Client/Systems/Knockback",
 	"Client/Systems/Movement",
 	"Client/Systems/Health",

@@ -7,7 +7,7 @@ local GetLocalCharacter = import "Utils/GetLocalCharacter"
 local ActionState = import "Client/Systems/ActionState"
 
 local Camera = import "Client/Systems/Camera"
-local Sound = import "Shared/Systems/Sound"
+local PlaySound = import "GameUtils/PlaySound"
 local CombatState = import "Client/Systems/CombatState"
 
 local Hitstop = import "GameUtils/Hitstop"
@@ -51,8 +51,7 @@ function AttackDamage:onThingDamaged(thing)
 		local userId = tostring(thing.userId)
 		self.damagedThings[userId] = true
 
-		Camera.dealDamageSpring:Accelerate(10)
-		Sound.playAtCharacter("Hit"..CombatState.comboCount)
+		PlaySound.localCharacter("Hit"..CombatState.comboCount)
 
 		local myChar = GetLocalCharacter()
 		local theirChar = thing.Character
@@ -60,6 +59,10 @@ function AttackDamage:onThingDamaged(thing)
 			local myVector = myChar.HumanoidRootPart.CFrame.lookVector
 			EnemyShake.shakeCharacter(theirChar, myVector, 0.05)
 		end
+		coroutine.resume(coroutine.create(function()
+			wait(0.1)
+			Camera.dealDamageSpring:Accelerate(20)
+		end))
 		Hitstop.stop(self.stopLength)
 	end
 end

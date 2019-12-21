@@ -6,7 +6,7 @@ local RunService = game:GetService("RunService")
 local StepOrder = import "Data/StepOrder"
 
 local Spring = import "Utils/Spring"
-local dealDamageSpring = Spring(0, 40, 0.2)
+local dealDamageSpring = Spring(0, 50, 0.2)
 -- local hurtSpring = Spring.new(0)
 
 local Camera = {}

@@ -3,7 +3,7 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 local Network = import "Network"
 local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
-local Sound = import "Shared/Systems/Sound"
+local PlaySound = import "GameUtils/PlaySound"
 
 local ActionIds = import "Data/ActionIds"
 
@@ -53,10 +53,10 @@ function DamageReplication.start()
 			local knockedOut = victimState.health.currentHealth <= 0
 			if knockedOut then
 				knockback.shouldKnockOut = true
-				Sound.playSound("Died", victimChar.HumanoidRootPart.Position)
-				Sound.playSound("Knockout", victimChar.HumanoidRootPart.Position)
+				PlaySound.character("Died", victimChar)
+				PlaySound.character("Knockout", victimChar)
 			elseif not knockback.shouldKnockdown then
-				Sound.playSound("Hurt", victimState.characterModel.HumanoidRootPart.Position)
+				PlaySound.character("Hurt", victimChar)
 				Network.fireClient(CombatEvents.REPLICATE_ACTION, victimPlayer, ActionIds.STAGGER)
 			end
 

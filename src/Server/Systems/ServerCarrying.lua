@@ -10,7 +10,7 @@ local SetCharacterOwnership = import "GameUtils/SetCharacterOwnership"
 
 local RecoverConstants = import "Data/RecoverConstants"
 
-local Sound = import "Shared/Systems/Sound"
+local PlaySound = import "GameUtils/PlaySound"
 
 local KNOCKED_OUT_DB = 1
 local DROPPED_DB = 1.5
@@ -82,7 +82,7 @@ local function setCarryingPlayer(carrierPlayer, carrierState, carriedPlayer, car
 		weld = weldConstraint
 	})
 
-	Sound.playSound("Pickup", carrierRoot.Position)
+	PlaySound.character("Pickup", carrierCharacter)
 end
 
 function Carrying.start()

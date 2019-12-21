@@ -3,7 +3,7 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 local Players = game:GetService("Players")
 
 local ColliderFromCharacter = import "GameUtils/ColliderFromCharacter"
-local Sound = import "Shared/Systems/Sound"
+local PlaySound = import "GameUtils/PlaySound"
 local EnemyShake = import "Client/Systems/EnemyShake"
 
 local ThrownPlayerDamage = {}
@@ -45,9 +45,8 @@ function ThrownPlayerDamage:onThingDamaged(thing)
 		self.damagedThings[userId] = true
 
 		local char = thing.Character
-		local root = char and char:FindFirstChild("HumanoidRootPart")
-		if root then
-			Sound.playSound("Bonk", root.Position)
+		if char then
+			PlaySound.character("Bonk", char)
 		end
 
 		local myChar = self.thrownCharacter

@@ -6,7 +6,7 @@ local ActionPhases = import "Data/ActionPhases"
 
 local AttackDamage = import "Shared/Damages/AttackDamage"
 local DamageSolver = import "Client/Systems/DamageSolver"
-local Sound = import "Shared/Systems/Sound"
+local PlaySound = import "GameUtils/PlaySound"
 
 local Hitstop = import "GameUtils/Hitstop"
 
@@ -42,7 +42,7 @@ function EndPunch.init(initialState)
 		currentPhase = ActionPhases.WINDUP
 	})
 
-	Sound.playAtCharacter("Windup")
+	PlaySound.localCharacter("Windup")
 end
 
 function EndPunch.step(state)
@@ -51,7 +51,7 @@ function EndPunch.step(state)
 	state.currentPhase = newPhase
 
 	if phaseChanged and ActionState.isActive(EndPunch.actionId, Hitstop.tick()) then
-		Sound.playAtCharacter("LoudSwing")
+		PlaySound.localCharacter("LoudSwing")
 		PlayPunchAnim.light(EndPunch.actionId)
 		local damage = AttackDamage.new(EndPunch.actionId, true, 0.2)
 		DamageSolver.addDamage(damage)
