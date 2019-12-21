@@ -19,7 +19,7 @@ AttackDamage.__index = AttackDamage
 function AttackDamage.new(actionId, shouldKnockdown, stopLength)
     local self = {
 		actionId = actionId,
-		damageAmount = 10,
+		damageAmount = 35,--10,
 		isActive = true,
 		damagedThings = {},
 		shouldKnockdown = shouldKnockdown,
@@ -61,7 +61,7 @@ function AttackDamage:onThingDamaged(thing)
 		end
 		coroutine.resume(coroutine.create(function()
 			wait(0.1)
-			Camera.dealDamageSpring:Accelerate(20)
+			Camera.dealDamageSpring:Accelerate(self.shouldKnockdown and 30 or 20)
 		end))
 		Hitstop.stop(self.stopLength)
 	end

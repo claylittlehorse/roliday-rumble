@@ -64,8 +64,17 @@ function CollisionGroups:start()
 			end
 
 			local isAttacking = ActionState.hasAction(ActionIds.PUNCH) or ActionState.hasAction(ActionIds.END_PUNCH)
+			local isKnockedOut = ActionState.hasAction(ActionIds.FALLDOWN) or ActionState.hasAction(ActionIds.KNOCKOUT)
 			local attackChanged = isAttacking ~= wasAttacking
 			wasAttacking = isAttacking
+
+			if isKnockedOut and characterCanCollide then
+				characterCanCollide = false
+				CollisionGroups.setCharacterCollisionGroup(
+					character,
+					CollisionGroupIds.PLAYER_NONCOLLIDE
+				)
+			end
 
 			if attackChanged and isAttacking and characterCanCollide then
 				characterCanCollide = false

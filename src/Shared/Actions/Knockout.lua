@@ -33,10 +33,10 @@ function Knockout.init(initialState)
 	end
 	humanoid:ChangeState(Enum.HumanoidStateType.Physics)
 
-	local flingVelocity = initialState.velocity + Vector3.new(0, 100, 0)
-	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit) * 15
+	local flingVelocity = initialState.velocity + Vector3.new(0, 60, 0)
+	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit) * 10
 	rootPart.RotVelocity = rotVelocity
-	rootPart.Velocity = flingVelocity.unit * 70
+	rootPart.Velocity = flingVelocity.unit * 90
 
 	ActionState.setActionState(Knockout.actionId, {
 		startTime = tick(),

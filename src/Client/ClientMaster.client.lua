@@ -19,8 +19,6 @@ end
 
 local loadOrder = {
 	"Client/Systems/ClientCommands",
-	"Client/Systems/UI",
-
 	"Client/Systems/ActionQueue",
 	"Client/Systems/ActionState",
 	"Client/Systems/DamageSolver",
@@ -31,7 +29,8 @@ local loadOrder = {
 	"Client/Systems/ClientCarrying",
 	"Client/Systems/Camera",
 	"Client/Systems/EnemyShake",
-	"Shared/Systems/CollisionGroups"
+	"Shared/Systems/CollisionGroups",
+	"Client/Systems/UI",
 }
 
 for _, path in ipairs(loadOrder) do
@@ -40,5 +39,5 @@ for _, path in ipairs(loadOrder) do
 end
 
 import.setConfig{
-	autoReload = true,
+	autoReload = false,
 }

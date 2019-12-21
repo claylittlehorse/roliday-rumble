@@ -8,6 +8,8 @@ local AttackDamage = import "Shared/Damages/AttackDamage"
 local DamageSolver = import "Client/Systems/DamageSolver"
 local PlaySound = import "GameUtils/PlaySound"
 
+local CombatState = import "Client/Systems/CombatState"
+
 local Hitstop = import "GameUtils/Hitstop"
 
 local PlayPunchAnim = import "GameUtils/PlayPunchAnim"
@@ -41,7 +43,11 @@ function Punch.init(initialState)
 		currentPhase = ActionPhases.WINDUP
 	})
 
-	PlaySound.localCharacter("Windup")
+	-- PlaySound.localCharacter("Windup")\
+	coroutine.resume(coroutine.create(function()
+		wait()
+		PlaySound.localCharacter("Swish"..CombatState.comboCount)
+	end))
 	PlayPunchAnim.light(Punch.actionId)
 end
 
@@ -51,7 +57,7 @@ function Punch.step(state)
 	state.currentPhase = newPhase
 
 	if phaseChanged and ActionState.isActive(Punch.actionId, Hitstop.tick()) then
-		PlaySound.localCharacter("Swing")
+		-- PlaySound.localCharacter("Swing")
 		local damage = AttackDamage.new(Punch.actionId)
 		DamageSolver.addDamage(damage)
 	end

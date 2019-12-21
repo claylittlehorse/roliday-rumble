@@ -6,6 +6,7 @@ local Roact = import "Roact"
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 
+local Camera = import "Client/Systems/Camera"
 local Health = import "Client/Systems/Health"
 
 local SIZE_X = 256
@@ -33,7 +34,12 @@ function HealthBar:init()
 	self.fullHealthTime = 0
 end
 
+local function round(number, increment)
+	return math.floor(number/increment + 0.5) * increment
+end
+
 function HealthBar:render()
+	local yOffset = self.state.yOffset or 0
 	return Roact.createElement("ImageLabel", {
 		Visible = Health.isActive(),
 		BackgroundTransparency = 1,
@@ -42,7 +48,8 @@ function HealthBar:render()
 		Size = UDim2.new(SCALE_X, 0, sizeCoef*SCALE_X, 0),
 		SizeConstraint = Enum.SizeConstraint.RelativeXX,
 		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 0, 70),
+		Position = UDim2.new(0.5, 0, 0, 70 - yOffset),
+		-- Rotation = -yOffset,
 		ZIndex = 1,
 
 		[Roact.Ref] = self.barRef
@@ -97,7 +104,6 @@ function HealthBar:didUpdate(prevProps, prevState)
 	local catchupRef = self.catchupRef.current
 	local catchupClipRef = self.catchupClipRef.current
 	local healthClipRef = self.healthClipRef.current
-	local barRef = self.barRef.current
 
 	if not (catchupClipRef and healthClipRef and catchupRef) then
 		return
@@ -172,13 +178,11 @@ function HealthBar:didMount(prevProps, prevState)
 		local healthRef = self.healthRef.current
 		local healthClipRef = self.healthClipRef.current
 
-		barRef.Visible = Health.isActive()
-
 		if not (barRef and catchupRef and healthRef and healthClipRef) then
 			return
 		end
 
-		-- Size
+		barRef.Visible = Health.isActive()
 
 		local barSizeX = barRef.AbsoluteSize.X
 		catchupRef.Size = UDim2.new(0, barSizeX, 1, 0)
@@ -190,6 +194,10 @@ function HealthBar:didMount(prevProps, prevState)
 		local sat = 201
 		local value = 160 + (math.min((1-percent) * 2, 1) * 60)
 		healthRef.ImageColor3 = Color3.fromHSV(hue / 360, sat / 255, value / 255)
+
+		self:setState({
+			yOffset = round(Camera.takeDamageSpring:GetPosition() * 20, 1)
+		})
 	end)
 
 end

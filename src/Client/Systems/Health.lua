@@ -9,6 +9,8 @@ local ActionState = import "Client/Systems/ActionState"
 local ActionIds = import "Data/ActionIds"
 local GetLocalCharacter = import "Utils/GetLocalCharacter"
 
+local Camera = import "Client/Systems/Camera"
+
 local Health = {}
 local currentHealth
 local isActive = false
@@ -33,6 +35,9 @@ end
 
 function Health.start()
 	Network.hookEvent(CombatEvents.REPLICATE_HEALTH, function(health)
+		if currentHealth and currentHealth > health then
+			Camera.takeDamageSpring:Accelerate(health == 0 and 50 or 20)
+		end
 		currentHealth = health
 	end)
 

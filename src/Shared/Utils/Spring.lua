@@ -117,9 +117,9 @@ return function(p, s, d)
 		["Time"]     = nil;
 	}
 
-	local pos = p and p*0 or 0
+	local pos = p or 0
 	this.Position = pos
-	this.Velocity = pos
+	this.Velocity = 0
 	this.Target   = pos
 	this.Speed    = s or 5
 	this.Damping  = d or 0.5

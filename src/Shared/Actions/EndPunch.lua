@@ -18,7 +18,7 @@ EndPunch.movementPriority = 1
 EndPunch.actionId = ActionIds.END_PUNCH
 EndPunch.phaseTimings = {
 	[ActionPhases.WINDUP] = 0.1,
-	[ActionPhases.ACTIVE] = 0.3,
+	[ActionPhases.ACTIVE] = 0.4,
 	[ActionPhases.COOLDOWN] = 0.5,
 }
 
@@ -42,7 +42,11 @@ function EndPunch.init(initialState)
 		currentPhase = ActionPhases.WINDUP
 	})
 
-	PlaySound.localCharacter("Windup")
+	coroutine.resume(coroutine.create(function()
+		wait()
+		PlaySound.localCharacter("Swish3")
+		PlayPunchAnim.light(EndPunch.actionId)
+	end))
 end
 
 function EndPunch.step(state)
@@ -51,8 +55,6 @@ function EndPunch.step(state)
 	state.currentPhase = newPhase
 
 	if phaseChanged and ActionState.isActive(EndPunch.actionId, Hitstop.tick()) then
-		PlaySound.localCharacter("LoudSwing")
-		PlayPunchAnim.light(EndPunch.actionId)
 		local damage = AttackDamage.new(EndPunch.actionId, true, 0.2)
 		DamageSolver.addDamage(damage)
 	end
@@ -63,7 +65,7 @@ function EndPunch.step(state)
 end
 
 function EndPunch.changeSpeed(baseSpeed)
-	return baseSpeed * 1.2
+	return baseSpeed * 0.8
 end
 
 function EndPunch.addVelocity()
