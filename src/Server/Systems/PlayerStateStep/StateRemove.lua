@@ -23,7 +23,7 @@ function StateRemove.step(playerStates)
 			if knockedDown then
 				knockedDown:Destroy()
 			end
-			Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, false)
+			Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, false, false)
 			Network.fireClient(CombatEvents.REPLICATE_HEALTH, player, 0)
 		end
 		-- elseif playerState.health.currentHealth <= 0 then

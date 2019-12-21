@@ -86,19 +86,27 @@ function PlayerStateManager.getPlayerStates()
 	return playerStates
 end
 
+function PlayerStateManager.resetPlayerState(player, shouldActivate)
+	local userId = tostring(player.UserId)
+	local character = player.character
+	if IsValidCharacter(character) and not playerStates[userId] then
+		print("resetting", player, shouldActivate)
+		local state = getInitialState(player)
+		setupCharacter(player)
+		playerStates[userId] = state
+
+		Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, shouldActivate, true)
+		if shouldActivate then
+			Network.fireClient(CombatEvents.REPLICATE_HEALTH, player, state.health.currentHealth)
+		end
+	end
+end
+
 function PlayerStateManager.resetPlayerStates()
 	playerStates = {}
 	local players = Players:GetPlayers()
 	for _, player in pairs(players) do
-		local userId = tostring(player.UserId)
-		local character = player.character
-		if IsValidCharacter(character) then
-			local state = getInitialState(player)
-			setupCharacter(player)
-			Network.fireClient(CombatEvents.REPLICATE_ACTIVE, player, true)
-			Network.fireClient(CombatEvents.REPLICATE_HEALTH, player, state.health.currentHealth)
-			playerStates[userId] = state
-		end
+		PlayerStateManager.resetPlayerState(player, true)
 	end
 end
 

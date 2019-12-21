@@ -14,12 +14,12 @@ local currentHealth
 local isActive = false
 
 local disabledStates = {
-	Enum.HumanoidStateType.Seated,
+	-- Enum.HumanoidStateType.Seated,
 	Enum.HumanoidStateType.Flying,
 	Enum.HumanoidStateType.GettingUp,
 	Enum.HumanoidStateType.FallingDown,
 	Enum.HumanoidStateType.Ragdoll,
-	Enum.HumanoidStateType.Climbing,
+	-- Enum.HumanoidStateType.Climbing,
 	Enum.HumanoidStateType.PlatformStanding,
 }
 
@@ -36,12 +36,12 @@ function Health.start()
 		currentHealth = health
 	end)
 
-	Network.hookEvent(CombatEvents.REPLICATE_ACTIVE, function(active)
+	Network.hookEvent(CombatEvents.REPLICATE_ACTIVE, function(active, shouldDisableStates)
 		isActive = active
 
 		local char = GetLocalCharacter()
 		local humanoid = char and char:FindFirstChild("Humanoid")
-		if isActive and humanoid then
+		if humanoid and shouldDisableStates then
 			for _, humanoidState in pairs(disabledStates) do
 				humanoid:SetStateEnabled(humanoidState, false)
 			end
