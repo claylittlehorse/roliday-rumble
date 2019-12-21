@@ -29,7 +29,6 @@ function KnockOut.step(playerStates)
 			Network.fireClient(CombatEvents.REPLICATE_ACTION, player, ActionIds.GET_UP)
 		elseif isKnockedOut and isFullRecovered and didntJustRecover then
 			playerState.ko.isKnockedOut = false
-			print("getting up")
 			Network.fireClient(CombatEvents.REPLICATE_ACTION, playerState.player, ActionIds.GET_UP)
 		end
 	end

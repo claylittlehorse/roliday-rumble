@@ -28,7 +28,6 @@ function HealthbarTagCollection:render()
 		local healthAlpha = characterInfo.healthAlpha
 		local rootPart = characterInfo.rootPart
 
-		print("rendering", name, "tag")
 		local worldPosCF = CFrame.new(rootPart.Position + Vector3.new(0, 6, 0))
 		children[name] = Roact.createElement(HealthbarTag, {
 			adornee = rootPart,

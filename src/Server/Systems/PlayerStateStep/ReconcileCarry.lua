@@ -53,7 +53,6 @@ function ReconcileCarry.step(playerStates)
 			local carrierInvalid, carrierState = isInvalid(playerState.carrying.playerCarryingMe, playerStates)
 			if not carryingWeld or not carryingWeld:IsDescendantOf(Workspace) or carrierInvalid or isFullyRecovered then
 				if isFullyRecovered then
-					print('not carry, changing owner')
 					SetCharacterOwnership(playerState, playerState.player)
 				end
 				clearCarriedState(playerState)

@@ -52,11 +52,6 @@ function GameLoop.start()
 			else
 				local playerStatesList = getPlayerStatesAsList()
 				if #playerStatesList <= 1 then
-					if playerStatesList[1] then
-						print(playerStatesList[1].userId, "wins")
-					end
-
-					print("game end")
 					isGameRunning = false
 				end
 			end
