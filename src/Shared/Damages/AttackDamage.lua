@@ -58,22 +58,24 @@ function AttackDamage:onThingDamaged(thing)
 		local theirChar = thing.Character
 		if myChar then
 			local myVector = myChar.HumanoidRootPart.CFrame.lookVector
-			EnemyShake.shakeCharacter(theirChar, myVector, self.stopLength)
+			EnemyShake.shakeCharacter(theirChar, myVector, 0.05)
 		end
 		Hitstop.stop(self.stopLength)
 	end
 end
 
 function AttackDamage:canDamageThing(thing)
-	if thing == Players.localPlayer then
+	if Hitstop.isStopped() or thing == Players.localPlayer then
 		return false
 	end
 
 	if typeof(thing) == "Instance" and thing:IsA("Player") then
 		local character = thing.Character
 		local health = character and character:FindFirstChild("HealthVal")
-		local humanoid = character and character:FindFirstChild("Humanoid")
-		if (not health) or (health.Value == 0) or (not humanoid) or (humanoid.PlatformStand) then
+		local knockedDown = character and character:FindFirstChild("KnockedDown")
+		local isKnockedDown = knockedDown == nil or knockedDown.Value
+		local isDead = health == nil or health.Value == 0
+		if isKnockedDown or isDead then
 			return false
 		end
 

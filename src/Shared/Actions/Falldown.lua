@@ -19,8 +19,8 @@ Falldown.movementPriority = 1
 Falldown.actionId = ActionIds.FALLDOWN
 Falldown.phaseTimings = {
 	[ActionPhases.WINDUP] = 0,
-	[ActionPhases.ACTIVE] = 1.4,
-	[ActionPhases.COOLDOWN] = 0.1,
+	[ActionPhases.ACTIVE] = 1.5,
+	[ActionPhases.COOLDOWN] = 0,
 }
 
 function Falldown.validate()
@@ -44,7 +44,7 @@ function Falldown.init(initialState)
 	if not (humanoid and rootPart) then
 		return
 	end
-	humanoid.PlatformStand = true
+	humanoid:ChangeState(Enum.HumanoidStateType.Physics)
 
 	local flingVelocity = initialState.velocity + Vector3.new(0, 40, 0)
 	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit)

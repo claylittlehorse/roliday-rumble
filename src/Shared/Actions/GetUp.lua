@@ -4,6 +4,9 @@ local ActionIds = import "Data/ActionIds"
 local ActionState = import "Client/Systems/ActionState"
 local ActionPhases = import "Data/ActionPhases"
 
+local Network = import "Network"
+local CombatEvents = import "Data/NetworkEvents/CombatEvents"
+
 -- local Animations = import "Client/Systems/Animations"
 -- local AnimationNames = import "Data/AnimationNames"
 local GetLocalCharacter = import "Utils/GetLocalCharacter"
@@ -59,7 +62,8 @@ function GetUp.step(state, character)
 	rootPart.CFrame = rootPart.CFrame:Lerp(state.targetCF, 0.5)
 	if ActionState.isComplete(GetUp.actionId) then
 		rootPart.CFrame = state.targetCF
-		humanoid.PlatformStand = false
+		humanoid:ChangeState(Enum.HumanoidStateType.Running)
+		Network.fireServer(CombatEvents.REQUEST_GETUP)
 		ActionState.setActionState(GetUp.actionId, nil)
 	end
 end

@@ -8,6 +8,8 @@ local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 local SetCharacterOwnership = import "GameUtils/SetCharacterOwnership"
 
+local RecoverConstants = import "Data/RecoverConstants"
+
 local Sound = import "Shared/Systems/Sound"
 
 local KNOCKED_OUT_DB = 1
@@ -30,8 +32,9 @@ local function isCarriedValid(carriedState)
 	local isntBeingCarried = carriedState.carrying.playerCarryingMe == nil
 	local wasntJustKnockedOut = tick() - carriedState.ko.knockedOutTime >= KNOCKED_OUT_DB
 	local wasntJustDropped = tick() - carriedState.carrying.lastCarriedTime >= DROPPED_DB
+	local isntFullyRecovered = carriedState.health.currentHealth < RecoverConstants.FULL_RECOVER_THRESHOLD
 
-	local isValid = isntBeingCarried and isKnockedOut and wasntJustDropped and wasntJustKnockedOut
+	local isValid = isntBeingCarried and isKnockedOut and wasntJustDropped and wasntJustKnockedOut and isntFullyRecovered
 	return isValid
 end
 

@@ -5,11 +5,22 @@ local Players = game:GetService("Players")
 
 local Network = import "Network"
 local CombatEvents = import "Data/NetworkEvents/CombatEvents"
+local CollisionGroups = import "Shared/Systems/CollisionGroups"
 
 local PlayerStateManager = {}
 local playerStates = {}
 
 local MAX_HEALTH = 100
+
+local disabledStates = {
+	Enum.HumanoidStateType.Seated,
+	Enum.HumanoidStateType.Flying,
+	Enum.HumanoidStateType.GettingUp,
+	Enum.HumanoidStateType.FallingDown,
+	Enum.HumanoidStateType.Ragdoll,
+	Enum.HumanoidStateType.Climbing,
+	Enum.HumanoidStateType.PlatformStanding,
+}
 
 local function setupCharacter(player)
 	local health = Instance.new("NumberValue")
@@ -17,16 +28,28 @@ local function setupCharacter(player)
 	health.Value = MAX_HEALTH
 	health.Parent = player.Character
 
+	local knockedDown = Instance.new("BoolValue")
+	knockedDown.Name = "KnockedDown"
+	knockedDown.Value = false
+	knockedDown.Parent = player.Character
+
 	for _, part in pairs(player.Character:GetChildren()) do
 		if part:IsA("BasePart") then
-			part.CustomPhysicalProperties = PhysicalProperties.new(4, 1, 0.1, 2, 2)
+			part.CustomPhysicalProperties = PhysicalProperties.new(10, 3, 0, 5, 5)
 		end
 	end
+
+	for _, humanoidState in pairs(disabledStates) do
+		player.Character.Humanoid:SetStateEnabled(humanoidState, false)
+	end
+
+	CollisionGroups.setCharacterCollisionGroup(player.Character, CollisionGroups.groupIds.PLAYER_COLLIDE)
 end
 
 local function getInitialState(player)
 	return {
 		characterModel = player.Character,
+		player = player,
 		health = {
 			currentHealth = MAX_HEALTH,
 			lastDamagedTime = 0,
@@ -35,6 +58,9 @@ local function getInitialState(player)
 		ko = {
 			knockedOutTime = 0,
 			isKnockedOut = false,
+
+			isKnockedDown = false,
+			knockedDownTime = 0,
 		},
 		carrying = {
 			playerImCarrying = nil,

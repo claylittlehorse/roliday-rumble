@@ -31,7 +31,7 @@ function Knockout.init(initialState)
 	if not (humanoid and rootPart) then
 		return
 	end
-	humanoid.PlatformStand = true
+	humanoid:ChangeState(Enum.HumanoidStateType.Physics)
 
 	local flingVelocity = initialState.velocity + Vector3.new(0, 100, 0)
 	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit) * 15

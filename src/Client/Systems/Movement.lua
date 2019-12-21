@@ -83,6 +83,8 @@ local function doMovement()
 	if Hitstop.isStopped() then
 		_bodyVel.MaxForce = Vector3.new(400000, 400000, 400000)
 		_bodyVel.Velocity = Vector3.new(0, 0, 0)
+		humanoid.WalkSpeed = 0
+		return
 	elseif moveVel.magnitude > 0.5 then
 		_bodyVel.MaxForce = Vector3.new(400000, 0, 400000)
 		_bodyVel.Velocity = moveVel + (moveDirection * speed)

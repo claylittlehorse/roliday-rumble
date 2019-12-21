@@ -18,22 +18,19 @@ function KnockOut.step(playerStates)
 		local isRecovered = playerState.health.currentHealth >= RecoverConstants.RECOVER_THRESHOLD
 
 		local isFullRecovered = playerState.health.currentHealth >= RecoverConstants.FULL_RECOVER_THRESHOLD
+		local didntJustRecover = tick() - playerState.carrying.lastCarriedTime > RecoverConstants.RECOVER_TIMEOUT
 
 		if isDead and not isKnockedOut then
 			playerState.ko.isKnockedOut = true
 			playerState.ko.knockedOutTime = tick()
-
 		elseif isKnockedOut and isRecovered and isntBeingCarried and wasntJustCarried then
-			print("Get up")
 			playerState.ko.isKnockedOut = false
-
 			local player = Players:GetPlayerByUserId(userId)
 			Network.fireClient(CombatEvents.REPLICATE_ACTION, player, ActionIds.GET_UP)
-		elseif isKnockedOut and isFullRecovered then
+		elseif isKnockedOut and isFullRecovered and didntJustRecover then
 			playerState.ko.isKnockedOut = false
-
-			local player = Players:GetPlayerByUserId(userId)
-			Network.fireClient(CombatEvents.REPLICATE_ACTION, player, ActionIds.GET_UP)
+			print("getting up")
+			Network.fireClient(CombatEvents.REPLICATE_ACTION, playerState.player, ActionIds.GET_UP)
 		end
 	end
 end

@@ -4,6 +4,7 @@ local Players = game:GetService("Players")
 
 local ColliderFromCharacter = import "GameUtils/ColliderFromCharacter"
 local Sound = import "Shared/Systems/Sound"
+local EnemyShake = import "Client/Systems/EnemyShake"
 
 local ThrownPlayerDamage = {}
 ThrownPlayerDamage.__index = ThrownPlayerDamage
@@ -31,7 +32,7 @@ function ThrownPlayerDamage:setActive(active)
 end
 
 function ThrownPlayerDamage:shouldCleanup()
-	if tick() - self.startTime > 1.5 then
+	if tick() - self.startTime > 1.25 then
 		return true
 	end
 
@@ -48,6 +49,14 @@ function ThrownPlayerDamage:onThingDamaged(thing)
 		if root then
 			Sound.playSound("Bonk", root.Position)
 		end
+
+		local myChar = self.thrownCharacter
+		local theirChar = thing.Character
+		if myChar then
+			local myVector = myChar.HumanoidRootPart.CFrame.lookVector
+			EnemyShake.shakeCharacter(theirChar, myVector, 0.1)
+			EnemyShake.shakeCharacter(myChar, myVector, 0.1)
+		end
 	end
 end
 
@@ -58,9 +67,14 @@ function ThrownPlayerDamage:canDamageThing(thing)
 
 	if typeof(thing) == "Instance" and thing:IsA("Player") then
 		local character = thing.Character
+		if thing.character == self.thrownCharacter then
+			return false
+		end
 		local health = character and character:FindFirstChild("HealthVal")
-		local humanoid = character and character:FindFirstChild("Humanoid")
-		if (not health) or (health.Value == 0) or (not humanoid) or (humanoid.PlatformStand) then
+		local knockedDown = character and character:FindFirstChild("KnockedDown")
+		local isKnockedDown = knockedDown == nil or knockedDown.Value
+		local isDead = health == nil or health.Value == 0
+		if isKnockedDown or isDead then
 			return false
 		end
 

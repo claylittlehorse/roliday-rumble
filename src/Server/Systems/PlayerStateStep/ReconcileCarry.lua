@@ -2,7 +2,7 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 
 local Workspace = game:GetService("Workspace")
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
-
+local SetCharacterOwnership = import "GameUtils/SetCharacterOwnership"
 local RecoverConstants = import "Data/RecoverConstants"
 
 local ReconcileCarry = {}
@@ -52,6 +52,10 @@ function ReconcileCarry.step(playerStates)
 			local carryingWeld = playerState.carrying.carryingWeld
 			local carrierInvalid, carrierState = isInvalid(playerState.carrying.playerCarryingMe, playerStates)
 			if not carryingWeld or not carryingWeld:IsDescendantOf(Workspace) or carrierInvalid or isFullyRecovered then
+				if isFullyRecovered then
+					print('not carry, changing owner')
+					SetCharacterOwnership(playerState, playerState.player)
+				end
 				clearCarriedState(playerState)
 				clearCarrierState(carrierState)
 			end

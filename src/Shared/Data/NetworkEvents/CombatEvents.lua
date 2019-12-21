@@ -5,5 +5,6 @@ return {
 	REPLICATE_HEALTH = "ReplicateHealth",
 	REPLICATE_ACTIVE = "UpdateActive",
 
-	REQUEST_CARRY = "RequestCarry"
+	REQUEST_CARRY = "RequestCarry",
+	REQUEST_GETUP = "RequestGetUp",
 }

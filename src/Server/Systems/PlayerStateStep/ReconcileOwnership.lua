@@ -14,13 +14,7 @@ function ReconcileOwnership.step(playerStates)
 		local doesntHaveOwnership = playerState.carrying.networkOwner ~= player
 		local wasntJustCarried = tick() - playerState.carrying.lastCarriedTime > CARRY_TIMEOUT
 
-		-- if isntKnockedOut and doesntHaveOwnership then
-
-		-- elseif doesntHaveOwnership then
-
-		-- end
 		if doesntHaveOwnership and wasntJustCarried then
-			print("changedt.")
 			SetCharacterOwnership(playerState, player)
 		end
 	end

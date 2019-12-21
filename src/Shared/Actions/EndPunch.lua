@@ -51,7 +51,6 @@ function EndPunch.step(state)
 	state.currentPhase = newPhase
 
 	if phaseChanged and ActionState.isActive(EndPunch.actionId, Hitstop.tick()) then
-		print("neu damage")
 		Sound.playAtCharacter("LoudSwing")
 		PlayPunchAnim.light(EndPunch.actionId)
 		local damage = AttackDamage.new(EndPunch.actionId, true, 0.2)

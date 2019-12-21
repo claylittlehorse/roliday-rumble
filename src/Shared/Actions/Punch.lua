@@ -52,7 +52,6 @@ function Punch.step(state)
 
 	if phaseChanged and ActionState.isActive(Punch.actionId, Hitstop.tick()) then
 		Sound.playAtCharacter("Swing")
-		print("new damage")
 		local damage = AttackDamage.new(Punch.actionId)
 		DamageSolver.addDamage(damage)
 	end
@@ -73,9 +72,9 @@ function Punch.changeSpeed(baseSpeed)
 end
 
 function Punch.addVelocity()
-	if ActionState.isActive(Punch.actionId) then
+	if ActionState.isActive(Punch.actionId, Hitstop.tick()) then
 		local alpha = 1 - ActionState.getPhaseAlpha(Punch.actionId, Hitstop.tick())
-		return Vector3.new(0, 0, alpha * -10)
+		return Vector3.new(0, 0, alpha * -12)
 	end
 
 	return Vector3.new(0, 0, 0)

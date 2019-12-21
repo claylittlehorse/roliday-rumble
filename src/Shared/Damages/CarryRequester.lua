@@ -14,7 +14,7 @@ local ActionIds = import "Data/ActionIds"
 local CarryRequester = {}
 CarryRequester.__index = CarryRequester
 
-local PICKUP_DEBOUNCE = 0.5
+local PICKUP_DEBOUNCE = 0.25
 
 function CarryRequester.new(thrownCharacter)
     local self = {

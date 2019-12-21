@@ -50,7 +50,8 @@ function DamageReplication.start()
 		if attackerState and victimState and isValidAttacker(attackerState) and isValidVictim(victimState) then
 			local victimChar = victimState.characterModel
 			victimState.health.currentHealth = math.max(victimState.health.currentHealth - damage, 0)
-			if victimState.health.currentHealth <= 0 then
+			local knockedOut = victimState.health.currentHealth <= 0
+			if knockedOut then
 				knockback.shouldKnockOut = true
 				Sound.playSound("Died", victimChar.HumanoidRootPart.Position)
 				Sound.playSound("Knockout", victimChar.HumanoidRootPart.Position)
@@ -62,6 +63,11 @@ function DamageReplication.start()
 			local victimHealth = victimChar and victimChar:FindFirstChild("HealthVal")
 			if victimHealth then
 				victimHealth.Value = victimState.health.currentHealth
+			end
+			local knockedDown = victimChar and victimChar:FindFirstChild("KnockedDown")
+			if knockedDown and knockback.shouldKnockdown or knockedOut then
+				knockedDown.Value = true
+				victimState.ko.knockedDownTime = tick()
 			end
 
 			victimState.health.lastDamagedTime = tick()
