@@ -6,9 +6,13 @@ local restrictedGroups = {
 
 return function(registry)
 	registry:RegisterHook("BeforeRun", function(context)
-		local restricted = true--context.Executor:GetRankInGroup(4590888) < 254
+		local isTestPlayer = context.Executor.UserId < 0
+		if isTestPlayer then
+			return
+		end
 
-		if restrictedGroups[context.Group] and restricted then
+		local isntAdmin = context.Executor:GetRankInGroup(4590888) < 254
+		if restrictedGroups[context.Group] and isntAdmin then
 			return "You don't have permission to run this command"
 		end
 	end)

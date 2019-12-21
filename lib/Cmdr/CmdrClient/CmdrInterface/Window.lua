@@ -200,6 +200,57 @@ end
 
 local lastPressTime = 0
 local pressCount = 0
+
+local function autocomplete(self)
+	local item = self.AutoComplete:GetSelectedItem()
+	local text = self:GetEntryText()
+	if item and not (text:sub(#text, #text):match("%s") and self.AutoComplete.LastItem) then
+		local replace = item[2]
+		local newText
+		local insertSpace = true
+		local command = self.AutoComplete.Command
+
+		if command then
+			local lastArg = self.AutoComplete.Arg
+
+			newText = command.Alias
+			insertSpace = self.AutoComplete.NumArgs ~= #command.ArgumentDefinitions
+
+			local args = command.Arguments
+			for i = 1, #args do
+				local arg = args[i]
+				local segments = arg.RawSegments
+				if arg == lastArg then
+					segments[#segments] = replace
+				end
+
+				local argText = arg.Prefix .. table.concat(segments, ",")
+
+				-- Put auto completion options in quotation marks if they have a space
+				if argText:find(" ") then
+					argText = ("%q"):format(argText)
+				end
+
+				newText = ("%s %s"):format(newText, argText)
+
+				if arg == lastArg then
+					break
+				end
+			end
+		else
+			newText = replace
+		end
+		-- need to wait a frame so we can eat the \t
+		wait()
+		-- Update the text box
+		self:SetEntryText(newText .. (insertSpace and " " or ""))
+	else
+		-- Still need to eat the \t even if there is no auto-complete to show
+		wait()
+		self:SetEntryText(self:GetEntryText())
+	end
+end
+
 --- Handles user input when the box is focused
 function Window:BeginInput(input, gameProcessed)
 	if GuiService.MenuIsOpen then
@@ -251,53 +302,7 @@ function Window:BeginInput(input, gameProcessed)
 		wait()
 		self:SetEntryText(self:GetEntryText():gsub("\n", ""):gsub("\r", ""))
 	elseif input.KeyCode == Enum.KeyCode.Tab then -- Auto complete
-		local item = self.AutoComplete:GetSelectedItem()
-		local text = self:GetEntryText()
-		if item and not (text:sub(#text, #text):match("%s") and self.AutoComplete.LastItem) then
-			local replace = item[2]
-			local newText
-			local insertSpace = true
-			local command = self.AutoComplete.Command
-
-			if command then
-				local lastArg = self.AutoComplete.Arg
-
-				newText = command.Alias
-				insertSpace = self.AutoComplete.NumArgs ~= #command.ArgumentDefinitions
-
-				local args = command.Arguments
-				for i = 1, #args do
-					local arg = args[i]
-					local segments = arg.RawSegments
-					if arg == lastArg then
-						segments[#segments] = replace
-					end
-
-					local argText = arg.Prefix .. table.concat(segments, ",")
-
-					-- Put auto completion options in quotation marks if they have a space
-					if argText:find(" ") then
-						argText = ("%q"):format(argText)
-					end
-
-					newText = ("%s %s"):format(newText, argText)
-
-					if arg == lastArg then
-						break
-					end
-				end
-			else
-				newText = replace
-			end
-			-- need to wait a frame so we can eat the \t
-			wait()
-			-- Update the text box
-			self:SetEntryText(newText .. (insertSpace and " " or ""))
-		else
-			-- Still need to eat the \t even if there is no auto-complete to show
-			wait()
-			self:SetEntryText(self:GetEntryText())
-		end
+		autocomplete(self)
 	else
 		self:ClearHistoryState()
 	end
@@ -306,6 +311,7 @@ end
 -- Hook events
 Entry.TextBox.FocusLost:Connect(
 	function(submit)
+		autocomplete(Window)
 		return Window:LoseFocus(submit)
 	end
 )

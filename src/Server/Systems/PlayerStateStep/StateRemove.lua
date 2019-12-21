@@ -9,11 +9,11 @@ local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 
 local StateRemove = {}
 
-function StateRemove.step(playerStates)
+function StateRemove.step(playerStates, forceRemoveAll)
 	for userId, playerState in pairs(playerStates) do
 		local character = playerState.characterModel
 		local player = Players:GetPlayerByUserId(userId)
-		if not IsValidCharacter(character) then
+		if forceRemoveAll or not IsValidCharacter(character) then
 			playerStates[userId] = nil
 			local health = character:FindFirstChild("HealthVal")
 			if health then

@@ -35,8 +35,15 @@ local function getPlayerStatesAsList()
 	return playerStates
 end
 
--- local gameStartTime = 0
 local isGameRunning = false
+function GameLoop.restartGame()
+	if not isGameRunning then
+		return "Can't restart, game isn't running"
+	else
+		isGameRunning = false
+		return "Restarting game..."
+	end
+end
 
 function GameLoop.start()
 	Network.createEvent(CombatEvents.REPLICATE_ACTIVE)

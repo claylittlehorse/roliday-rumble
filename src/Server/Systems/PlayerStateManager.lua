@@ -86,6 +86,10 @@ function PlayerStateManager.getPlayerStates()
 	return playerStates
 end
 
+function PlayerStateManager.cleanupStates()
+
+end
+
 function PlayerStateManager.resetPlayerStates()
 	playerStates = {}
 	local players = Players:GetPlayers()
