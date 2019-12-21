@@ -54,7 +54,7 @@ function Health.start()
 
 		local char = GetLocalCharacter()
 		local humanoid = char and char:FindFirstChild("Humanoid")
-		if not isKnockedDown and not isGettingUp then
+		if not isKnockedDown and not isGettingUp and humanoid then
 			if humanoid:GetState() == Enum.HumanoidStateType.Physics then
 				humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
 			end

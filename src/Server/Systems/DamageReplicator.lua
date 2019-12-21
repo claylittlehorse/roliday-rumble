@@ -1,9 +1,14 @@
 local import = require(game.ReplicatedStorage.Lib.Import)
 
+local Debris = game:GetService("Debris")
+
 local Network = import "Network"
 local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local PlaySound = import "GameUtils/PlaySound"
+
+local Blast = import "Workspace/Terrain/Blast"
+local Hit = import "Workspace/Terrain/Hit"
 
 local ActionIds = import "Data/ActionIds"
 
@@ -58,6 +63,15 @@ function DamageReplication.start()
 			elseif not knockback.shouldKnockdown then
 				PlaySound.character("Hurt", victimChar)
 				Network.fireClient(CombatEvents.REPLICATE_ACTION, victimPlayer, ActionIds.STAGGER)
+			end
+
+			local rootPart = victimState.characterModel:FindFirstChild("HumanoidRootPart")
+			if rootPart then
+				local particles = (knockedOut and Blast or Hit):Clone()
+				particles.Parent = Blast.Parent
+				particles.Position = rootPart.Position
+				for _,v in pairs(particles:GetChildren()) do v:Emit(v.Rate) end
+				Debris:addItem(particles)
 			end
 
 			local victimHealth = victimChar and victimChar:FindFirstChild("HealthVal")
