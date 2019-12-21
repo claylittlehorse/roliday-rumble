@@ -16,7 +16,8 @@ function ThrownPlayerDamage.new(thrownCharacter)
 		damageAmount = 5,
 		isActive = true,
 		damagedThings = {},
-		shouldKnockdown = true
+		shouldKnockdown = true,
+		lastDamage = 0,
 	}
     return setmetatable(self, ThrownPlayerDamage)
 end
@@ -51,16 +52,18 @@ function ThrownPlayerDamage:onThingDamaged(thing)
 
 		local myChar = self.thrownCharacter
 		local theirChar = thing.Character
+
+		self.lastDamage = tick()
 		if myChar then
 			local myVector = myChar.HumanoidRootPart.CFrame.lookVector
-			EnemyShake.shakeCharacter(theirChar, myVector, 0.1)
-			EnemyShake.shakeCharacter(myChar, myVector, 0.1)
+			EnemyShake.shakeCharacter(theirChar, myVector, 0.15)
+			EnemyShake.shakeCharacter(myChar, myVector, 0.15)
 		end
 	end
 end
 
 function ThrownPlayerDamage:canDamageThing(thing)
-	if thing == Players.localPlayer then
+	if tick() - self.lastDamage < 0.15 or thing == Players.localPlayer then
 		return false
 	end
 
