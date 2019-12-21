@@ -6,9 +6,24 @@ local ColliderFromCharacter = {}
 local CapsuleColliderModel = import "Data/Models/CapsuleColliderModel"
 local SphereColliderModel = import "Data/Models/SphereColliderModel"
 
-local CHAR_CAPSULE = CapsuleColliderModel.new(Vector3.new(), Vector3.new(0, HitboxConstants.PLAYER_HEIGHT, 0), HitboxConstants.PLAYER_RADIUS)
-local DAMAGE_SPHERE = SphereColliderModel.new(HitboxConstants.ATTACK_OFFSET, HitboxConstants.ATTACK_RADIUS)
-local THROWN_CAPSULE = CapsuleColliderModel.new(Vector3.new(), Vector3.new(0, HitboxConstants.PLAYER_HEIGHT, 0), HitboxConstants.PLAYER_RADIUS * 1.5)
+local P_RAD = HitboxConstants.PLAYER_RADIUS
+local P_HT = HitboxConstants.PLAYER_HEIGHT - P_RAD
+
+
+local CHAR_CAPSULE = CapsuleColliderModel.new(
+	Vector3.new(0, P_RAD, 0),
+	Vector3.new(0, P_HT, 0),
+	P_RAD
+)
+local DAMAGE_SPHERE = SphereColliderModel.new(
+	HitboxConstants.ATTACK_OFFSET,
+	HitboxConstants.ATTACK_RADIUS
+)
+local THROWN_CAPSULE = CapsuleColliderModel.new(
+	Vector3.new(0, P_RAD, 0),
+	Vector3.new(0, P_HT, 0),
+	P_RAD * 1.5
+)
 
 local function getFootCF(character)
 	local rootPart = character:FindFirstChild("HumanoidRootPart")

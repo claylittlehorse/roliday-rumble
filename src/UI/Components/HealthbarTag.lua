@@ -25,7 +25,7 @@ local HEIGHT_OFFSET_Y = 6
 
 function HealthbarTag:init()
 	self.state = {
-		health = 1,
+		healthAlpha = 1,
 	}
 
 	self.bgRef = Roact.createRef()
@@ -92,7 +92,7 @@ function HealthbarTag:render()
 				HealthClip = Roact.createElement("Frame", {
 					BackgroundTransparency = 1,
 					ClipsDescendants = true,
-					Size = self:getSize(UDim2.new(1, 0, 1, 0), self.healthClipRef),
+					Size = UDim2.new(1, 0, 1, 0), --self:getSize(UDim2.new(1, 0, 1, 0), self.healthClipRef),
 
 					[Roact.Ref] = self.healthClipRef,
 				}, {
@@ -100,7 +100,7 @@ function HealthbarTag:render()
 						BackgroundTransparency = 1,
 						Image = "rbxassetid://2924872024",
 						ImageColor3 = Color3.fromRGB(34, 159, 36),
-						Size = self:getSize(UDim2.new(0, 0, 0, 1), self.healthRef),
+						Size = UDim2.new(0, 0, 0, 1), --self:getSize(UDim2.new(0, 0, 0, 1), self.healthRef),
 						ZIndex = 2,
 
 						[Roact.Ref] = self.healthRef
@@ -110,7 +110,7 @@ function HealthbarTag:render()
 				CatchupClip = Roact.createElement("Frame", {
 					BackgroundTransparency = 1,
 					ClipsDescendants = true,
-					Size = self:getSize(UDim2.new(1, 0, 1, 0), self.catchupClipRef),
+					Size = UDim2.new(1, 0, 1, 0), --self:getSize(UDim2.new(1, 0, 1, 0), self.catchupClipRef),
 
 					[Roact.Ref] = self.catchupClipRef,
 				}, {
@@ -118,7 +118,7 @@ function HealthbarTag:render()
 						BackgroundTransparency = 1,
 						Image = "rbxassetid://2924872024",
 						ImageColor3 = Color3.fromRGB(255, 47, 47),
-						Size = self:getSize(UDim2.new(0, 0, 0, 1), self.catchupRef),
+						Size = UDim2.new(0, 0, 0, 1),--self:getSize(UDim2.new(0, 0, 0, 1), self.catchupRef),
 						ZIndex = 1,
 
 						[Roact.Ref] = self.catchupRef,
@@ -134,13 +134,6 @@ function HealthbarTag:didUpdate(prevProps, prevState)
 	local oldHealth = prevProps.healthAlpha
 
 	if newHealth ~= oldHealth then
-		if newHealth == 1 then
-			self.fullHealthTime = tick()
-		else
-			self.fullHealthTime = nil
-		end
-		self.lastHealthChange = tick()
-
 		local catchupRef = self.catchupRef:getValue()
 		local catchupClipRef = self.catchupClipRef:getValue()
 		local healthClipRef = self.healthClipRef:getValue()
@@ -150,12 +143,21 @@ function HealthbarTag:didUpdate(prevProps, prevState)
 			return
 		end
 
+		if newHealth == 1 then
+			self.fullHealthTime = tick()
+		else
+			self.fullHealthTime = nil
+		end
+
+		self.lastHealthChange = tick()
+
 		bgRef.Visible = true
 		self.caughtUp = false
 
 		if newHealth > oldHealth then
 			self.gainedHealth = true
-			catchupRef.ImageColor3 = Color3.fromRGB(83, 214, 53)
+			catchupRef.ImageColor3 = Color3.fromRGB(167, 233, 245)
+			-- catchupRef.ImageTransparency = 0.5
 
 			TweenService:Create(catchupClipRef, TWEEN_INFO, {
 				Size = UDim2.new(newHealth, 0, 1, 0)
@@ -163,6 +165,7 @@ function HealthbarTag:didUpdate(prevProps, prevState)
 		elseif newHealth < oldHealth then
 			self.gainedHealth = false
 			catchupRef.ImageColor3 = Color3.fromRGB(255, 47, 47)
+			-- catchupRef.ImageTransparency = 0
 
 			TweenService:Create(healthClipRef, TWEEN_INFO, {
 				Size = UDim2.new(newHealth, 0, 1, 0)
@@ -172,8 +175,9 @@ function HealthbarTag:didUpdate(prevProps, prevState)
 end
 
 function HealthbarTag:catchUp()
-	local health = self.props.health
+	self.caughtUp = true
 
+	local healthAlpha = self.props.healthAlpha
 	local catchupClipRef = self.catchupClipRef.current
 	local healthClipRef = self.healthClipRef.current
 
@@ -183,11 +187,11 @@ function HealthbarTag:catchUp()
 
 	if self.gainedHealth then
 		TweenService:Create(healthClipRef, TWEEN_INFO, {
-			Size = UDim2.new(health, 0, 1, 0)
+			Size = UDim2.new(healthAlpha, 0, 1, 0)
 		}):Play()
 	else
 		TweenService:Create(catchupClipRef, TWEEN_INFO, {
-			Size = UDim2.new(health, 0, 1, 0)
+			Size = UDim2.new(healthAlpha, 0, 1, 0)
 		}):Play()
 	end
 end
@@ -198,6 +202,7 @@ function HealthbarTag:didMount(prevProps, prevState)
 			if self.stop then
 				break
 			elseif tick() - self.lastHealthChange > 0.5 and not self.caughtUp then
+				print("doing catchup")
 				self:catchUp()
 			end
 		end

@@ -58,6 +58,10 @@ function DamageSolver.addDamage(damage)
 	damages[#damages+1] = damage
 end
 
+function DamageSolver.getDamages()
+	return damages
+end
+
 function DamageSolver.start()
 	RunService:BindToRenderStep("DamageStep", StepOrder.DAMAGE, function()
 		local character = GetLocalCharacter()

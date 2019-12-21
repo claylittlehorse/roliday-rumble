@@ -33,7 +33,14 @@ function ThrownPlayerDamage:setActive(active)
 end
 
 function ThrownPlayerDamage:shouldCleanup()
-	if tick() - self.startTime > 1.25 then
+	local thrownChar = self.thrownCharacter
+	local thrownRoot = thrownChar:FindFirstChild("HumanoidRootPart")
+
+	if not thrownRoot then
+		return false
+	end
+
+	if thrownRoot.Velocity.Magnitude < 10 then
 		return true
 	end
 

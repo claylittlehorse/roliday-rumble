@@ -8,9 +8,9 @@ local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 
 local HealthRegen = {}
 
-local regenInterval = 1
-local regenAmount = 5
-local damageTimeout = 7.5
+local regenInterval = 1.5
+local regenAmount = 10
+local damageTimeout = 5
 
 local knockoutTimeout = 3
 

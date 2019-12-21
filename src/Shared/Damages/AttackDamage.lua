@@ -30,7 +30,7 @@ end
 
 function AttackDamage:getCollider()
 	local character = GetLocalCharacter()
-	local hitbox = ColliderFromCharacter.characterCollider(character)
+	local hitbox = ColliderFromCharacter.damageCollider(character)
 	return hitbox
 end
 

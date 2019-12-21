@@ -113,7 +113,8 @@ function HealthBar:didUpdate(prevProps, prevState)
 
 	if newHealth > oldHealth then
 		self.gainedHealth = true
-		catchupRef.ImageColor3 = Color3.fromRGB(83, 214, 53)
+		catchupRef.ImageColor3 = Color3.fromRGB(167, 233, 245)
+		-- catchupRef.ImageTransparency = 0.5
 
 		TweenService:Create(catchupClipRef, TWEEN_INFO, {
 			Size = UDim2.new(newHealth, 0, 1, 0)
@@ -121,6 +122,7 @@ function HealthBar:didUpdate(prevProps, prevState)
 	elseif newHealth < oldHealth then
 		self.gainedHealth = false
 		catchupRef.ImageColor3 = Color3.fromRGB(255, 47, 47)
+		catchupRef.ImageTransparency = 0
 
 		TweenService:Create(healthClipRef, TWEEN_INFO, {
 			Size = UDim2.new(newHealth, 0, 1, 0)
