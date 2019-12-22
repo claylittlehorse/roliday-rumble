@@ -40,7 +40,11 @@ function ThrownPlayerDamage:shouldCleanup()
 		return false
 	end
 
-	if thrownRoot.Velocity.Magnitude < 10 then
+	if (thrownRoot.Velocity.Y < 0) and (not self.isFalling) then
+		self.isFalling = true
+	end
+
+	if self.isFalling and (thrownRoot.Velocity.Y > 0) then
 		return true
 	end
 
