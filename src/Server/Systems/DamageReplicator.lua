@@ -7,8 +7,8 @@ local CombatEvents = import "Data/NetworkEvents/CombatEvents"
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local PlaySound = import "GameUtils/PlaySound"
 
-local Blast = import "Workspace/Terrain/Blast"
-local Hit = import "Workspace/Terrain/Hit"
+local Blast = import "Assets/Effects/ParticleHolder/Blast"
+local Hit = import "Assets/Effects/ParticleHolder/Hit"
 
 local ActionIds = import "Data/ActionIds"
 

@@ -8,7 +8,15 @@
       "$properties": {
         "HttpEnabled": true
       }
-    },
+		},
+
+		"Workspace": {
+			"$className": "Workspace",
+
+			"GeneratedMapFolder": {
+				"$className": "Folder"
+			}
+		},
 
    "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
