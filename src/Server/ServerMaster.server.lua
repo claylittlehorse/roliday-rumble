@@ -12,7 +12,9 @@ local loadOrder = {
 	"Server/Systems/DamageReplicator",
 	"Server/Systems/ServerCarrying",
 	"Shared/Systems/CollisionGroups",
-	"Server/Systems/GetUpReplicator"
+	"Server/Systems/GetUpReplicator",
+	"Server/Systems/LavaSystem",
+	"Server/Systems/Spawns"
 }
 
 for _, path in ipairs(loadOrder) do

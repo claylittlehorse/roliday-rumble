@@ -21,7 +21,7 @@ local disabledStates = {
 	Enum.HumanoidStateType.GettingUp,
 	Enum.HumanoidStateType.FallingDown,
 	Enum.HumanoidStateType.Ragdoll,
-	Enum.HumanoidStateType.Climbing,
+	-- Enum.HumanoidStateType.Climbing,
 	Enum.HumanoidStateType.PlatformStanding,
 }
 

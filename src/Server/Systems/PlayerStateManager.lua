@@ -1,7 +1,7 @@
 local import = require(game.ReplicatedStorage.Lib.Import)
 
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
-local Players = game:GetService("Players")
+-- local Players = game:GetService("Players")
 
 local Network = import "Network"
 local CombatEvents = import "Data/NetworkEvents/CombatEvents"
@@ -20,7 +20,7 @@ local disabledStates = {
 	Enum.HumanoidStateType.GettingUp,
 	Enum.HumanoidStateType.FallingDown,
 	Enum.HumanoidStateType.Ragdoll,
-	Enum.HumanoidStateType.Climbing,
+	-- Enum.HumanoidStateType.Climbing,
 	Enum.HumanoidStateType.PlatformStanding,
 }
 
@@ -78,6 +78,10 @@ local function getInitialState(player)
 			lastCarriedTime = 0,
 			networkOwner = player,
 			carryingWeld = nil,
+		},
+		lava = {
+			isInLava = false,
+			lastLavaDamage = tick()
 		}
 	}
 end
@@ -90,9 +94,8 @@ function PlayerStateManager.cleanupStates()
 
 end
 
-function PlayerStateManager.resetPlayerStates()
+function PlayerStateManager.resetPlayerStates(players)
 	playerStates = {}
-	local players = Players:GetPlayers()
 	for _, player in pairs(players) do
 		local userId = tostring(player.UserId)
 		local character = player.character

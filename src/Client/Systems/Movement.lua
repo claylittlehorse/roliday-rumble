@@ -86,7 +86,7 @@ local function doMovement()
 		humanoid.WalkSpeed = 0
 		return
 	elseif moveVel.magnitude > 0.5 then
-		_bodyVel.MaxForce = Vector3.new(400000, 0, 400000)
+		_bodyVel.MaxForce = Vector3.new(400000, 2000, 400000)
 		_bodyVel.Velocity = moveVel + (moveDirection * speed)
 		return
 	else

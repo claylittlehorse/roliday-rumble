@@ -62,6 +62,7 @@ function GetUp.step(state, character)
 	rootPart.CFrame = rootPart.CFrame:Lerp(state.targetCF, 0.5)
 	if ActionState.isComplete(GetUp.actionId) then
 		rootPart.CFrame = state.targetCF
+		humanoid.AutoRotate = true
 		humanoid:ChangeState(Enum.HumanoidStateType.Running)
 		Network.fireServer(CombatEvents.REQUEST_GETUP)
 		ActionState.setActionState(GetUp.actionId, nil)

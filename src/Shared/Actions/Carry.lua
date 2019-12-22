@@ -10,7 +10,7 @@ local ActionState = import "Client/Systems/ActionState"
 local Drop = import "Shared/Actions/Drop"
 
 local Carry = {}
-Carry.movementPriority = 0
+Carry.movementPriority = 1
 Carry.actionId = ActionIds.CARRY
 
 function Carry.validate()
@@ -51,6 +51,10 @@ function Carry.step(state)
 	if weldConstraint.Part1 == nil or not weldConstraint.Part1:IsDescendantOf(Workspace) then
 		ActionState.setActionState(Carry.actionId, nil)
 	end
+end
+
+function Carry.changeSpeed(baseSpeed)
+	return baseSpeed * 0.8
 end
 
 

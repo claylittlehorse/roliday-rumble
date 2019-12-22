@@ -31,12 +31,13 @@ function HealthRegen.step(playerStates)
 		local wasntDamagedRecently = tick() - playerState.health.lastDamagedTime >= damageTimeout
 		local hasntRegenedRecently = tick() - playerState.health.lastRegenedTime >= regenInterval
 		local wasntKodRecently = tick() - playerState.ko.knockedOutTime >= knockoutTimeout
+		local isntInLava = playerState.lava.isInLava == false
 		local isKnockedOut = playerState.ko.isKnockedOut
 		local isLessThanMaxHealth = playerState.health.currentHealth < 100
 
 		if wasntDamagedRecently and hasntRegenedRecently and isLessThanMaxHealth then
 			regenPlayer(userId, playerState)
-		elseif isKnockedOut and wasntKodRecently and hasntRegenedRecently then
+		elseif isntInLava and isKnockedOut and wasntKodRecently and hasntRegenedRecently then
 			regenPlayer(userId, playerState)
 		end
 	end

@@ -71,7 +71,8 @@ end
 function EndPunch.addVelocity()
 	if ActionState.isActive(EndPunch.actionId, Hitstop.tick()) then
 		local alpha = 1 - ActionState.getPhaseAlpha(EndPunch.actionId, Hitstop.tick())
-		return Vector3.new(0, 0, alpha * -40)
+		print(alpha * 50)
+		return Vector3.new(0, 0, alpha * -50)
 	end
 
 	return Vector3.new(0, 0, 0)

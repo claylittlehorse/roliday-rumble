@@ -9,7 +9,6 @@ local SphereColliderModel = import "Data/Models/SphereColliderModel"
 local P_RAD = HitboxConstants.PLAYER_RADIUS
 local P_HT = HitboxConstants.PLAYER_HEIGHT - P_RAD
 
-
 local CHAR_CAPSULE = CapsuleColliderModel.new(
 	Vector3.new(0, P_RAD, 0),
 	Vector3.new(0, P_HT, 0),

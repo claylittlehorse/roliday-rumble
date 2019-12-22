@@ -9,6 +9,7 @@ local PlaySound = import "GameUtils/PlaySound"
 
 local Blast = import "Assets/Effects/ParticleHolder/Blast"
 local Hit = import "Assets/Effects/ParticleHolder/Hit"
+local Terrain = import "Workspace/Terrain"
 
 local ActionIds = import "Data/ActionIds"
 
@@ -68,7 +69,7 @@ function DamageReplication.start()
 			local rootPart = victimState.characterModel:FindFirstChild("HumanoidRootPart")
 			if rootPart then
 				local particles = (knockedOut and Blast or Hit):Clone()
-				particles.Parent = Blast.Parent
+				particles.Parent = Terrain
 				particles.Position = rootPart.Position
 				for _,v in pairs(particles:GetChildren()) do v:Emit(v.Rate) end
 				Debris:addItem(particles)

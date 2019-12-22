@@ -25,9 +25,11 @@ function KnockOut.step(playerStates)
 			playerState.ko.knockedOutTime = tick()
 		elseif isKnockedOut and isRecovered and isntBeingCarried and wasntJustCarried then
 			playerState.ko.isKnockedOut = false
+			playerState.ko.isKnockedDown = false
 			local player = Players:GetPlayerByUserId(userId)
 			Network.fireClient(CombatEvents.REPLICATE_ACTION, player, ActionIds.GET_UP)
 		elseif isKnockedOut and isFullRecovered and didntJustRecover then
+			playerState.ko.isKnockedDown = false
 			playerState.ko.isKnockedOut = false
 			Network.fireClient(CombatEvents.REPLICATE_ACTION, playerState.player, ActionIds.GET_UP)
 		end

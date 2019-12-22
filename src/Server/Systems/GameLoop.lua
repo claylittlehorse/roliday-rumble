@@ -2,6 +2,8 @@ local import = require(game.ReplicatedStorage.Lib.Import)
 
 local Players = game:GetService("Players")
 
+local LavaSystem = import "Server/Systems/LavaSystem"
+local Spawns = import "Server/Systems/Spawns"
 local PlayerStateManager = import "Server/Systems/PlayerStateManager"
 local IsValidCharacter = import "GameUtils/IsValidCharacter"
 
@@ -36,6 +38,8 @@ local function getPlayerStatesAsList()
 end
 
 local isGameRunning = false
+local areCharactersSpawning = false
+
 function GameLoop.restartGame()
 	if not isGameRunning then
 		return "Can't restart, game isn't running"
@@ -50,13 +54,19 @@ function GameLoop.start()
 
 	coroutine.resume(coroutine.create(function()
 		while wait(1) do
-			if not isGameRunning then
+			if not isGameRunning and not areCharactersSpawning then
 				local charCount = countValidCharacters()
 				if charCount >= 2 and charCount == #Players:GetPlayers() then
-					isGameRunning = true
-					PlayerStateManager.resetPlayerStates()
+					areCharactersSpawning = true
+					LavaSystem.resetPosition()
+					Spawns.spawnPlayers(Players:GetPlayers(), function(spawnedPlayers)
+						areCharactersSpawning = false
+						isGameRunning = true
+						PlayerStateManager.resetPlayerStates(spawnedPlayers)
+						LavaSystem.startMoving()
+					end)
 				end
-			else
+			elseif isGameRunning then
 				local playerStatesList = getPlayerStatesAsList()
 				if #playerStatesList <= 1 then
 					isGameRunning = false

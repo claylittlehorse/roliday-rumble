@@ -32,11 +32,12 @@ function Knockout.init(initialState)
 		return
 	end
 	humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+	humanoid.AutoRotate = false
 
-	local flingVelocity = initialState.velocity + Vector3.new(0, 60, 0)
+	local flingVelocity = initialState.velocity + Vector3.new(0, 100, 0)
 	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit) * 10
 	rootPart.RotVelocity = rotVelocity
-	rootPart.Velocity = flingVelocity.unit * 90
+	rootPart.Velocity = flingVelocity.unit * 70
 
 	ActionState.setActionState(Knockout.actionId, {
 		startTime = tick(),

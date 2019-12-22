@@ -45,6 +45,7 @@ function Falldown.init(initialState)
 		return
 	end
 	humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+	humanoid.AutoRotate = false
 
 	local flingVelocity = initialState.velocity + Vector3.new(0, 40, 0)
 	local rotVelocity = Vector3.new(0, 1, 0):Cross(flingVelocity.unit)
